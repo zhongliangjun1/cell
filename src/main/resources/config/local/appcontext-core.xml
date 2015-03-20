@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:avatar="http://www.dianping.com/schema/avatar"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+
+
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+
+	http://www.dianping.com/schema/avatar http://www.dianping.com/schema/avatar/avatar-1.0.xsd">
+
+    <context:component-scan base-package="com.dianping"/>
+    <context:annotation-config/>
+
+    <avatar:cache jms-url="${cache.jms.url}" topic-name="${cache.jms.topic.name}"
+                  jms-username="${cache.jms.username}" jms-password="${cache.jms.password}"/>
+
+
+</beans>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+
+
+
+
+    <bean id="mqShopServer" class="com.dianping.swallow.producer.adapter.MQServiceAdapter">
+		<constructor-arg>
+			<value>${dp-action-common.swallow.server.url}</value>
+		</constructor-arg>
+	</bean>
+
+	<!--Destination-->
+	<bean id="destShopServer" class="com.dianping.swallow.Destination" factory-method="topic">
+		<constructor-arg>
+			<value>${dp-action-common.topic.name}</value>
+		</constructor-arg>
+	</bean>
+
+
+
+    <!-- Consumer -->
+    <bean id="messageConsumerFactory" class="com.dianping.swallow.consumer.impl.ConsumerFactoryImpl" factory-method="getInstance" />
+
+    <bean id="consumerConfig" class="com.dianping.swallow.consumer.ConsumerConfig">
+        <property name="threadPoolSize">
+            <value>1</value>
+        </property>
+    </bean>
+
+
+
+
+	<!-- 前台用户添加商户 -->
+    <bean id="userChangeShopMsgDest" class="com.dianping.swallow.common.message.Destination" factory-method="topic">
+        <constructor-arg>
+            <value>${dp-action-common.topic.name}</value>
+        </constructor-arg>
+    </bean>
+    <bean id="userChangeShopMsgListener" class="com.dianping.cell.listener.UserChangeShopMsgListener" >
+    </bean>
+    <bean id="userChangeShopMsgConsumerClient" factory-bean="messageConsumerFactory" factory-method="createConsumer" init-method="start">
+        <constructor-arg>
+            <ref bean="userChangeShopMsgDest" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>${cell.jms.clientId.prefix}</value>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="consumerConfig" />
+        </constructor-arg>
+        <property name="listener">
+            <ref local="userChangeShopMsgListener" />
+        </property>
+    </bean>
+
+
+
+
+    <!-- POI更新商户 -->
+    <bean id="poiChangeShopMsgDest" class="com.dianping.swallow.common.message.Destination" factory-method="topic">
+        <constructor-arg>
+            <value>dp_poi_change</value>
+        </constructor-arg>
+    </bean>
+    <bean id="poiChangeShopMsgListener" class="com.dianping.cell.listener.PoiChangeShopMsgListener" >
+    </bean>
+    <bean id="poiChangeShopMsgConsumerClient" factory-bean="messageConsumerFactory" factory-method="createConsumer" init-method="start">
+        <constructor-arg>
+            <ref bean="poiChangeShopMsgDest" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>${cell.jms.clientId.prefix}</value>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="consumerConfig" />
+        </constructor-arg>
+        <property name="listener">
+            <ref local="poiChangeShopMsgListener" />
+        </property>
+    </bean>
+
+
+
+
+    <!-- POI另一种更新商户 -->
+    <bean id="shopStatusChangeMsgDest" class="com.dianping.swallow.common.message.Destination" factory-method="topic">
+        <constructor-arg>
+            <value>dp_shop_status_change</value>
+        </constructor-arg>
+    </bean>
+    <bean id="shopStatusChangeMsgListener" class="com.dianping.cell.listener.ShopStatusChangeMsgListener" >
+    </bean>
+    <bean id="shopStatusChangeMsgConsumerClient" factory-bean="messageConsumerFactory" factory-method="createConsumer" init-method="start">
+        <constructor-arg>
+            <ref bean="shopStatusChangeMsgDest" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>${cell.jms.clientId.prefix}</value>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="consumerConfig" />
+        </constructor-arg>
+        <property name="listener">
+            <ref local="shopStatusChangeMsgListener" />
+        </property>
+    </bean>
+
+
+
+
+</beans>

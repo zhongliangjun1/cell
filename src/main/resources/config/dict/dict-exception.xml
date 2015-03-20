@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dicts>
+
+    <category id="Exception.Message" desc="异常信息的资源文件">
+        <entry key="Error.message.error.showTitle"  value="抱歉" />
+        <entry key="Error.message.nodata.showContent"  value="您要查看的内容不存在" />
+        <entry key="Error.message.system.error.showContent"  value="系统无法处理您的请求" />
+        <entry key="Error.message.params.error.show"  value="您输入的参数有误" />
+        <entry key="Error.message.ajax.search.error"  value="请求失败请重试" />
+    </category>
+
+</dicts>
