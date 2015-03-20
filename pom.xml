@@ -1,0 +1,167 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.dianping</groupId>
+    <artifactId>dianping-parent</artifactId>
+    <version>2.1.0</version>
+  </parent>
+
+  <groupId>com.dianping</groupId>
+  <artifactId>cell</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <name>cell</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <env>qa</env>
+    <struts.version>2.3.16.3</struts.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>com.dianping.cat</groupId>
+      <artifactId>cat-core</artifactId>
+      <version>1.1.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.dianping.platform</groupId>
+      <artifactId>platform-sdk</artifactId>
+      <version>1.1.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.1-alpha-1</version>
+        <configuration>
+          <warName>${artifactId}-${env}-${version}</warName>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <workspace>${basedir}</workspace>
+          <workspaceCodeStylesURL>
+            http://svn.apache.org/repos/asf/maven/plugins/trunk/maven-eclipse-plugin/src/optional/eclipse-config/maven-styles.xml
+          </workspaceCodeStylesURL>
+          <downloadSources>true</downloadSources>
+          <downloadJavadocs>false</downloadJavadocs>
+          <wtpversion>1.5</wtpversion>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.6.1</version>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <id>Test</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.1</version>
+            <executions>
+              <execution>
+                <id>install</id>
+                <phase>install</phase>
+                <configuration>
+                  <tasks>
+                    <copy todir="/data/Dianping/Deploy">
+                      <fileset dir="${basedir}/target">
+                        <include name="${artifactId}-${env}-${version}.war"/>
+                      </fileset>
+                    </copy>
+                    <exec
+                            dir="/data/Dianping/script"
+                            executable="bash"
+                            failonerror="true">
+                      <arg value="remote-exec-jboss.sh"/>
+                    </exec>
+                  </tasks>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>ant</groupId>
+                <artifactId>optional</artifactId>
+                <version>1.5.4</version>
+              </dependency>
+              <dependency>
+                <groupId>ant</groupId>
+                <artifactId>ant-commons-net</artifactId>
+                <version>1.6.5</version>
+              </dependency>
+              <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>1.4.1</version>
+              </dependency>
+              <dependency>
+                <groupId>ant</groupId>
+                <artifactId>ant-jsch</artifactId>
+                <version>1.6.5</version>
+              </dependency>
+              <dependency>
+                <groupId>jsch</groupId>
+                <artifactId>jsch</artifactId>
+                <version>0.1.25</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
