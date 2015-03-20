@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//log4j/log4j Configuration//EN" "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/"
+	threshold="null" debug="null">
+	<appender name="CONSOLE" class="com.dianping.combiz.misc.ExtendedConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[cell]%d %-5p [%c %L] %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="avatarAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<!-- <param name="Threshold" value="INFO" /> -->
+		<param name="File" value="/data/applogs/cell/logs/avatar.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[cell]%d %-5p [%c %L] %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="appAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<!-- <param name="Threshold" value="INFO" /> -->
+		<param name="File" value="/data/applogs/cell/logs/app.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[cell]%d %-5p [%c %L] %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="ibatisAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<!-- <param name="Threshold" value="INFO" /> -->
+		<param name="File" value="/data/applogs/cell/logs/ibatis.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[cell]%d %-5p [%c %L] %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="illegalAccessAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="/data/applogs/cell/logs/illegalAccess.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[cell]%d %-5p [%c %L] %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="illegalParameterAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="/data/applogs/cell/logs/illegalParameter.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[cell]%d %-5p [%c %L] %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="mongodbViewHitStatisticsAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="/data/applogs/cell/logs/viewHitStatistics.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[cell]%d %-5p [%c %L] %m%n" />
+		</layout>
+	</appender>
+	
+	<logger name="com.dianping.shoppicweb.util.MongoViewHitUtils">
+        <level value="WARN" />
+        <appender-ref ref="mongodbViewHitStatisticsAppender" />
+	</logger>
+	
+	<logger name="com.dianping.avatar">
+        <level value="WARN" />
+		<appender-ref ref="avatarAppender" />
+	</logger>
+
+	<logger name="com.ibatis">
+		<level value="WARN" />
+		<appender-ref ref="ibatisAppender" />
+	</logger>
+
+	<logger name="java.sql">
+		<level value="WARN" />
+	</logger>
+	
+	<logger name="org.springframework.jms">
+		<level value="ERROR" />
+	</logger>
+	
+	<logger name="org.apache.activemq">
+		<level value="ERROR" />
+	</logger>
+	
+	<logger name="org.apache.struts2">
+		<level value="ERROR" />
+	</logger>
+	
+	<logger name="org.apache.struts2.dispatcher.Dispatcher">
+		<level value="WARN" />
+		<appender-ref ref="illegalAccessAppender" />
+	</logger>
+	
+	<logger name="com.opensymphony.xwork2.ognl.OgnlValueStack">
+		<level value="WARN" />
+		<appender-ref ref="illegalParameterAppender" />
+	</logger>
+
+    <appender name="catAppender" class="com.dianping.cat.log4j.CatAppender"></appender>
+	
+	<root>
+		<level value="INFO" />
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="appAppender" />
+        <appender-ref ref="catAppender"/>
+	</root>
+	
+</log4j:configuration>
