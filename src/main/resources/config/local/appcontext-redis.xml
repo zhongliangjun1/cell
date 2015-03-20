@@ -8,37 +8,37 @@
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
-    <!--&lt;!&ndash; jedis 连接池配置&ndash;&gt;-->
-    <!--<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">-->
-        <!--<property name="maxActive"     value="${dp-qzone-index-web.redis.pool.maxActive}" />-->
-        <!--<property name="maxIdle"       value="${dp-qzone-index-web.redis.pool.maxIdle}" />-->
-        <!--<property name="maxWait"       value="${dp-qzone-index-web.redis.pool.maxWait}" />-->
-        <!--<property name="testOnBorrow"  value="${dp-qzone-index-web.redis.pool.testOnBorrow}" />-->
+    <!-- jedis 连接池配置-->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxActive"     value="${dp-qzone-index-web.redis.pool.maxActive}" />
+        <property name="maxIdle"       value="${dp-qzone-index-web.redis.pool.maxIdle}" />
+        <property name="maxWait"       value="${dp-qzone-index-web.redis.pool.maxWait}" />
+        <property name="testOnBorrow"  value="${dp-qzone-index-web.redis.pool.testOnBorrow}" />
+    </bean>
+
+    <!-- jedis 多个服务器配置-->
+    <bean id="jedisShardInfo1" class="redis.clients.jedis.JedisShardInfo">
+        <constructor-arg index="0" value="${dp-qzone-index-web.redis1.ip}" />
+        <constructor-arg index="1" value="${dp-qzone-index-web.redis.port}" type="int" />
+    </bean>
+
+    <!--<bean id="jedisShardInfo2" class="redis.clients.jedis.JedisShardInfo">-->
+        <!--<constructor-arg index="0" value="${redis2.ip}" />-->
+        <!--<constructor-arg index="1" value="${redis.port}" type="int" />-->
     <!--</bean>-->
 
-    <!--&lt;!&ndash; jedis 多个服务器配置&ndash;&gt;-->
-    <!--<bean id="jedisShardInfo1" class="redis.clients.jedis.JedisShardInfo">-->
-        <!--<constructor-arg index="0" value="${dp-qzone-index-web.redis1.ip}" />-->
-        <!--<constructor-arg index="1" value="${dp-qzone-index-web.redis.port}" type="int" />-->
-    <!--</bean>-->
-
-    <!--&lt;!&ndash;<bean id="jedisShardInfo2" class="redis.clients.jedis.JedisShardInfo">&ndash;&gt;-->
-        <!--&lt;!&ndash;<constructor-arg index="0" value="${redis2.ip}" />&ndash;&gt;-->
-        <!--&lt;!&ndash;<constructor-arg index="1" value="${redis.port}" type="int" />&ndash;&gt;-->
-    <!--&lt;!&ndash;</bean>&ndash;&gt;-->
 
 
-
-    <!--&lt;!&ndash; pool &ndash;&gt;-->
-    <!--<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">-->
-        <!--<constructor-arg index="0" ref="jedisPoolConfig" />-->
-        <!--<constructor-arg index="1">-->
-            <!--<list>-->
-                <!--<ref bean="jedisShardInfo1" />-->
-                <!--&lt;!&ndash;<ref bean="jedisShardInfo2"/>&ndash;&gt;-->
-            <!--</list>-->
-        <!--</constructor-arg>-->
-    <!--</bean>-->
+    <!-- pool -->
+    <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
+        <constructor-arg index="0" ref="jedisPoolConfig" />
+        <constructor-arg index="1">
+            <list>
+                <ref bean="jedisShardInfo1" />
+                <!--<ref bean="jedisShardInfo2"/>-->
+            </list>
+        </constructor-arg>
+    </bean>
 
 
     <!--redis.ip=192.168.1.110-->
