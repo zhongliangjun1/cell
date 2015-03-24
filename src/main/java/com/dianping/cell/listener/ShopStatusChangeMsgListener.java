@@ -1,9 +1,11 @@
 package com.dianping.cell.listener;
 
+import com.dianping.cell.handler.MWebRouterHandler;
 import com.dianping.swallow.common.message.Message;
 import com.dianping.swallow.consumer.BackoutMessageException;
 import com.google.common.primitives.Ints;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 
@@ -33,9 +35,12 @@ public class ShopStatusChangeMsgListener extends AbstractMsgListner {
 
         Integer shopId = Ints.tryParse((String) msg.get("shopId"));
 
-
+        mWebRouterHandler.execute(shopId);
 
     }
+
+    @Autowired
+    private MWebRouterHandler mWebRouterHandler;
 
 
 }
