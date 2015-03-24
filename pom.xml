@@ -53,6 +53,12 @@
     </dependency>
 
     <dependency>
+      <groupId>com.dianping</groupId>
+      <artifactId>shop-api</artifactId>
+      <version>0.3.30.67</version>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
