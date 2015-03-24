@@ -10,24 +10,5 @@
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
 
-    <bean id="airecShopService" class="com.dianping.dpQzone.service.impl.RecommendShopServiceImpl" lazy-init="false"
-          init-method="init">
-    </bean>
-    <bean id="tgRateService" class="com.dianping.dpQzone.service.impl.TGRateService">
-        <property name="dealRateService" ref="dealRateService"/>
-        <property name="reviewService" ref="reviewService"/>
-    </bean>
-
-    <bean id="officialFeedService" class="com.dianping.dpQzone.service.impl.OfficialFeedServiceImpl">
-        <property name="shopService" ref="shopService"/>
-        <property name="reviewService" ref="reviewService"/>
-        <property name="shopWebPictureService" ref="shopWebPictureService"/>
-    </bean>
-
-    <bean id="enrichFeedObjectService" class="com.dianping.dpQzone.service.feed.impl.EnrichFeedObjectServiceImpl">
-    </bean>
-
-    <bean id="enrichOfficaialFeedObjectService" class="com.dianping.dpQzone.service.feed.impl.EnrichOfficaialFeedObjectServiceImpl">
-    </bean>
 
 </beans>
