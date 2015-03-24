@@ -8,18 +8,31 @@
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
+
+    <!--#最大分配的对象数-->
+    <!--redis.pool.maxActive=1024-->
+    <!--#最大能够保持idel状态的对象数-->
+    <!--redis.pool.maxIdle=200-->
+    <!--#当池内没有返回对象时，最大等待时间-->
+    <!--redis.pool.maxWait=1000-->
+    <!--#当调用borrow Object方法时，是否进行有效性检查-->
+    <!--redis.pool.testOnBorrow=false-->
+    <!--#当调用return Object方法时，是否进行有效性检查-->
+    <!--redis.pool.testOnReturn=false-->
+
+
     <!-- jedis 连接池配置-->
     <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
-        <property name="maxActive"     value="${dp-qzone-index-web.redis.pool.maxActive}" />
-        <property name="maxIdle"       value="${dp-qzone-index-web.redis.pool.maxIdle}" />
-        <property name="maxWait"       value="${dp-qzone-index-web.redis.pool.maxWait}" />
-        <property name="testOnBorrow"  value="${dp-qzone-index-web.redis.pool.testOnBorrow}" />
+        <property name="maxActive"     value="${cell.redis.pool.maxActive}" />
+        <property name="maxIdle"       value="${cell.redis.pool.maxIdle}" />
+        <property name="maxWait"       value="${cell.redis.pool.maxWait}" />
+        <property name="testOnBorrow"  value="${cell.redis.pool.testOnBorrow}" />
     </bean>
 
     <!-- jedis 多个服务器配置-->
     <bean id="jedisShardInfo1" class="redis.clients.jedis.JedisShardInfo">
-        <constructor-arg index="0" value="${dp-qzone-index-web.redis1.ip}" />
-        <constructor-arg index="1" value="${dp-qzone-index-web.redis.port}" type="int" />
+        <constructor-arg index="0" value="${cell.redis1.ip}" />
+        <constructor-arg index="1" value="${cell.redis.port}" type="int" />
     </bean>
 
     <!--<bean id="jedisShardInfo2" class="redis.clients.jedis.JedisShardInfo">-->
@@ -39,23 +52,6 @@
             </list>
         </constructor-arg>
     </bean>
-
-
-    <!--redis.ip=192.168.1.110-->
-    <!--redis2.ip=192.168.1.112-->
-    <!--#Port-->
-    <!--redis.port=6379-->
-
-    <!--#最大分配的对象数-->
-    <!--redis.pool.maxActive=1024-->
-    <!--#最大能够保持idel状态的对象数-->
-    <!--redis.pool.maxIdle=200-->
-    <!--#当池内没有返回对象时，最大等待时间-->
-    <!--redis.pool.maxWait=1000-->
-    <!--#当调用borrow Object方法时，是否进行有效性检查-->
-    <!--redis.pool.testOnBorrow=false-->
-    <!--#当调用return Object方法时，是否进行有效性检查-->
-    <!--redis.pool.testOnReturn=false-->
 
 
 
