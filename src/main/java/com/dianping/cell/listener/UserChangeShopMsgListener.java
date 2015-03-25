@@ -28,12 +28,12 @@ public class UserChangeShopMsgListener extends AbstractMsgListner {
         if ( msg==null )
             return;
 
-        Integer type = Ints.tryParse((String) msg.get("type"));
+        Integer type = Ints.tryParse(msg.get("type").toString());
         if ( type==null || type!=201 )
             return;
 
         // 前台用户添加
-        Integer shopId = Ints.tryParse((String) msg.get("shopId"));
+        Integer shopId = Ints.tryParse(msg.get("shopId").toString());
 
         mWebRouterHandler.execute(shopId);
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ShopData">
+
+    <resultMap id="shop" class="com.dianping.cell.bean.ShopDto">
+        <result column="ShopID" property="shopId" />
+        <result column="ShopType" property="shopType" />
+    </resultMap>
+
+
+    <select id="loadShop" resultMap="shop" parameterClass="map">
+        SELECT ShopID,ShopType
+        FROM DP_Shop
+        WHERE   ShopID > #lastShopId# order by ShopID ASC limit 500
+    </select>
+
+    <select id="loadIncreaseShop" resultMap="shop" parameterClass="map">
+        SELECT ShopID,ShopType
+        FROM DP_Shop
+        WHERE LastDate between  #beginTime# and #endTime# order by ShopID
+    </select>
+
+
+
+
+
+
+
+</sqlMap>

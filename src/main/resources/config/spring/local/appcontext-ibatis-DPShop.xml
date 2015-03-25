@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+    <bean id="Shop-Master" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="jdbcUrl" value="${shop-server.main.master.jdbc.url}" />
+        <property name="user" value="${shop-server.main.master.jdbc.username}" />
+        <property name="password" value="${shop-server.main.master.jdbc.password}" />
+        <property name="driverClass" value="${seo-web.main.master.jdbc.driverClassName}" />
+        <property name="minPoolSize" value="${seo-web.main.master.c3p0.minSize}" />
+        <property name="maxPoolSize" value="${seo-web.main.master.c3p0.maxSize}" />
+        <property name="initialPoolSize" value="${seo-web.main.master.c3p0.initialSize}" />
+        <property name="maxIdleTime" value="300" />
+        <property name="idleConnectionTestPeriod" value="60" />
+        <property name="acquireRetryAttempts" value="3" />
+        <property name="acquireRetryDelay" value="300" />
+        <property name="maxStatements" value="0"/>
+        <property name="maxStatementsPerConnection" value="100"/>
+        <property name="numHelperThreads" value="6"/>
+        <property name="maxAdministrativeTaskTime" value="5"/>
+        <property name="preferredTestQuery" value="SELECT 1"/>
+    </bean>
+
+    <!-- Slave Main datasource -->
+    <bean id="Shop-Slave" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="jdbcUrl" value="${shop-server.main.slave.jdbc.url}" />
+        <property name="user" value="${shop-server.main.slave.jdbc.username}" />
+        <property name="password" value="${shop-server.main.slave.jdbc.password}" />
+        <property name="driverClass" value="${seo-web.main.slave.jdbc.driverClassName}" />
+        <property name="minPoolSize" value="${seo-web.main.slave.c3p0.minSize}" />
+        <property name="maxPoolSize" value="${seo-web.main.slave.c3p0.maxSize}" />
+        <property name="initialPoolSize" value="${seo-web.main.slave.c3p0.initialSize}" />
+        <property name="maxIdleTime" value="300" />
+        <property name="idleConnectionTestPeriod" value="60" />
+        <property name="acquireRetryAttempts" value="3" />
+        <property name="acquireRetryDelay" value="300" />
+        <property name="maxStatements" value="0"/>
+        <property name="maxStatementsPerConnection" value="100"/>
+        <property name="numHelperThreads" value="6"/>
+        <property name="maxAdministrativeTaskTime" value="5"/>
+        <property name="preferredTestQuery" value="SELECT 1"/>
+    </bean>
+
+    <!-- Read/Write Splitting -->
+    <bean id="newShop.dataSource" class="com.dianping.dpdl.sql.DPDataSource">
+        <property name="writeDS" value="Shop-Master"/>
+        <property name="readDS">
+            <map>
+                <entry key="Shop-Slave" value="10" />
+            </map>
+        </property>
+    </bean>
+
+    <bean id="newMain.sqlMapClient" class="com.dianping.avatar.dao.ibatis.spring.LimitSqlMapClientFactoryBean">
+        <property name="dataSource" ref="newShop.dataSource" />
+        <property name="configLocation" value="classpath:/config/sqlmap/main/sqlmap-config.xml" />
+        <property name="sqlConvert" ref="mysqlConverter" />
+    </bean>
+
+    <!-- The DAO default implementation for avatar -->
+    <bean id="newMain.daoRealizeTarget" class="com.dianping.avatar.dao.ibatis.IBatisGenericDaoImpl" abstract="true">
+        <property name="sqlMapClient" ref="newMain.sqlMapClient" />
+    </bean>
+
+    <bean id="shopDataDao" parent="parentDao">
+        <property name="proxyInterfaces" value="com.dianping.cell.dao.ShopDataDao"/>
+        <property name="target">
+            <bean parent="newMain.daoRealizeTarget">
+                <constructor-arg value="ShopData"/>
+            </bean>
+        </property>
+    </bean>
+
+
+
+</beans>
