@@ -61,7 +61,18 @@ value 站点映射 :
 	
 ####2) cell 详解 [ policy+listener+checker ]
 
-* **policy** 是由参与分拆的各个事业部共同协商制定的一份准则，
+* **policy** 是由参与分拆的各个事业部共同协商制定的一份准则，一型 url 对应一份 **policy**， 该 **policy** 将根据 url 中的 shopId 裁决该 url 属于哪个事业部类型，并路由到其对应站点。
+		
+		public interface Policy {
+
+    		public Type judge(int shopId);
+
+		}
+
+
+* **listener** 监听所有的 shop 变更，任意商户一旦有任何的改动，该 listener 便会获取其 shopId ，交由所有 **policy** 裁判，并将裁决结果更新到 redis 。
+
+* **checker** 是对 **listener** 的补充，以防有任何的消息遗漏。**checker** 可以是定时增量检查，也可以是全量检查。 
 
 	
 
