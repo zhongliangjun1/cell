@@ -17,7 +17,7 @@
     <select id="loadIncreaseShop" resultMap="shop" parameterClass="map">
         SELECT ShopID,ShopType
         FROM DP_Shop
-        WHERE LastDate between  #beginTime# and #endTime# order by ShopID
+        WHERE ShopID > #lastShopId# and LastDate between  #beginTime# and #endTime# order by ShopID limit 500
     </select>
 
 

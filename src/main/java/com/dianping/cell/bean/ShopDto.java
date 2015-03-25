@@ -1,6 +1,5 @@
 package com.dianping.cell.bean;
 
-import com.dianping.cell.policy.Type;
 import lombok.Data;
 
 /**
@@ -12,7 +11,5 @@ public class ShopDto {
     private Integer shopId;
 
     private Integer shopType;
-
-    private Type type;
 
 }

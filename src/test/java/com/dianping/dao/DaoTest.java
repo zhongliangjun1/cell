@@ -32,7 +32,7 @@ public class DaoTest extends AbstractTest {
         Date date2 = new Date(date.getTime()-1000*3600*24);
         String beginTime = dataFormat.format(date2);
         String endTime = dataFormat.format(date);
-        List<ShopDto> shopDtoList2 = shopDataDao.loadIncreaseShop(beginTime,endTime);
+        List<ShopDto> shopDtoList2 = shopDataDao.loadIncreaseShop(0,beginTime,endTime);
 
         System.out.println("read result : "+shopDtoList2.size());
 
