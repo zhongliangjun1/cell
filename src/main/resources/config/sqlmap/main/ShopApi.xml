@@ -11,7 +11,13 @@
     <select id="loadShop" resultMap="shop" parameterClass="map">
         SELECT ShopID,ShopType
         FROM DP_Shop
-        WHERE  (Power=5 or Power=10) AND  ShopID > #lastShopId# order by ShopID ASC limit 500
+        WHERE   ShopID > #lastShopId# order by ShopID ASC limit 500
+    </select>
+
+    <select id="loadIncreaseShop" resultMap="shop" parameterClass="map">
+        SELECT ShopID,ShopType
+        FROM DP_Shop
+        WHERE LastDate between  #beginTime# and #endTime# order by ShopID
     </select>
 
 

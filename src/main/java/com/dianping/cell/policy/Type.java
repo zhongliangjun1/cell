@@ -13,6 +13,7 @@ public enum Type {
     SHOPPING("shopping"),
     WEDDING("wedding"),
     HOTEL("hotel"),
+    MOVIE("movie"),
     BACKUP("backup");
 
     public String value;

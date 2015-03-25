@@ -17,4 +17,7 @@ public interface ShopDataDao extends GenericDao {
     @DAOAction(action = DAOActionType.QUERY)
     public List<ShopDto> loadShop(@DAOParam("lastShopId") int lastShopId);
 
+    @DAOAction(action = DAOActionType.QUERY)
+    public List<ShopDto> loadIncreaseShop(@DAOParam("beginTime") String beginTime,@DAOParam("endTime") String endTime);
+
 }

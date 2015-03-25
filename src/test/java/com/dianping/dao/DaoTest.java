@@ -6,6 +6,8 @@ import com.dianping.cell.dao.ShopDataDao;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -23,6 +25,16 @@ public class DaoTest extends AbstractTest {
         List<ShopDto> shopDtoList = shopDataDao.loadShop(0);
 
         System.out.println("read result : "+shopDtoList.size());
+
+
+        SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        Date date2 = new Date(date.getTime()-1000*3600*24);
+        String beginTime = dataFormat.format(date2);
+        String endTime = dataFormat.format(date);
+        List<ShopDto> shopDtoList2 = shopDataDao.loadIncreaseShop(beginTime,endTime);
+
+        System.out.println("read result : "+shopDtoList2.size());
 
 
     }
