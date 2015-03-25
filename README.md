@@ -29,3 +29,37 @@
 
 如上面 /shop/+d 这型的 url ，单纯从正则匹配的角度 slb 无法进行路由区分，因而也就无法进行站点拆分了。**cell** 这套解决方案正是为了解决这个问题。 
 
+
+
+### 解决方案
+
+![image](http://img.hb.aicdn.com/31bf7e5848d4ee7cb0b3a4dde02df329f8e44d08c037-73eRzB_fw658)
+
+为了解决 slb 正则匹配无法进行 url 识别的问题，为 nginx 编写一个 lua 脚本实现的模块。在匹配到 /shop/+d 这型 url 的时候，该脚本会解析出 url 中的 shopId，然后去访问 redis 查询该商户的类型，根据获取到的类型路由到对应的应用站点。
+
+
+####1) redis 配置
+如点评 M站 拆分的 redis 配置方案：
+
+key :  
+
+	mobile:wap:m:web:shop:+d (如 mobile:wap:m:web:shop:15909459 ~ http://m.dianping.com/shop/15909459) 
+ 
+value :  
+
+	main  | shopping | hotel | wedding | backup
+
+value 站点映射 :
+
+	main  --> mobile-m-shop-web  （新版 M 站）
+    shopping  --> m-shopping-web （购物 M 站）
+    hotel  --> m-hotel-web       （酒店 M 站）
+    wedding  --> m-wedding-web   （结婚 M 站）
+    backup --> mobile-wap-m-web  （旧版 M 站）
+	
+	
+	
+####2) cell 详解 [ policy+listener+checker ]	
+	
+
+    
