@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by withnate on 15-3-25.
  */
-public class ShopTypeWeeklyUpdate {
+public class ShopUpdateChecker {
 
 
 

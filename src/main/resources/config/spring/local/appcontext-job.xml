@@ -4,31 +4,30 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
 
-    <bean id="shopTypeJob" class="com.dianping.cell.checker.ShopTypeWeeklyUpdate" />
-    <bean id="shopTypeJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    <bean id="shopUpdateCheckerJob" class="com.dianping.cell.checker.ShopUpdateChecker" />
+
+    <bean id="shopUpdateCheckerJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject">
-            <ref local="shopTypeJob" />
+            <ref local="shopUpdateCheckerJob" />
         </property>
         <property name="targetMethod">
             <value>process</value>
         </property>
     </bean>
 
-    <bean id="shopTypeJobJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <bean id="shopUpdateCheckerJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail">
-            <ref bean="shopTypeJobDetail"/>
+            <ref bean="shopUpdateCheckerJobDetail"/>
         </property>
         <property name="cronExpression">
             <value>1 * * ? * *</value>
         </property>
     </bean>
 
-
-	
 	<bean id="quartzSchedulerFactoryBean" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-                <ref bean="shopTypeJobJobTrigger"/>
+                <ref bean="shopUpdateCheckerJobTrigger"/>
 			</list>
 		</property>
 		<property name="autoStartup" value="true"/>

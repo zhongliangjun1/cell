@@ -6,7 +6,7 @@
 
 ### 名字原由
 
-取名 **cell** 意指源于同一母体的站点，就像**细胞分裂**（cell division）一样不断分化独立，不同 BU 分拆定制自己的站点，却又服务着共同的业务。
+取名 **cell** 意指源于同一母体的站点，就像**细胞分裂**（cell division）一样不断分化独立，不同 BU 分拆定制自己的站点，却又可以服务着共同的业务。
 
 
 
@@ -59,7 +59,10 @@ value 站点映射 :
 	
 	
 	
-####2) cell 详解 [ policy+listener+checker ]	
+####2) cell 详解 [ policy+listener+checker ]
+
+* **policy** 是由参与分拆的各个事业部共同协商制定的一份准则，
+
 	
 
     
