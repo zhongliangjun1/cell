@@ -4,7 +4,9 @@ import com.dianping.cat.Cat;
 import com.dianping.cell.bean.ShopDto;
 import com.dianping.cell.dao.ShopDataDao;
 import com.dianping.cell.handler.MWebRouterHandler;
+import com.dianping.combiz.spring.util.LionConfigUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
@@ -17,35 +19,49 @@ import java.util.List;
  */
 public class ShopUpdateChecker {
 
-
+    private Logger logger = Logger.getLogger(this.getClass());
 
     @Autowired
-    ShopDataDao shopDataDao;
+    private ShopDataDao shopDataDao;
 
     @Autowired
     private MWebRouterHandler mWebRouterHandler;
 
 
     public void process(){
-        Date date = new Date();
-        SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        System.out.println(dataFormat.format(date).toString());
 
+        if ( "y".equals(LionConfigUtils.getProperty("cell.ShopUpdateChecker.switch", "n")) )
+            return;
 
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        logger.info("ShopUpdateChecker Begin : " + getNowTime());
 
-        if(day==1){
-            //updateAllShopType();
-        }else {
-            //dailyUpdateShopType();
+        if( isTimeToUpdateAll() ){
+            updateAllShopType();
+        } else {
+            dailyUpdateShopType();
         }
+
+        logger.info("ShopUpdateChecker End : "+getNowTime());
 
     }
 
+    private String getNowTime() {
+        Date date = new Date();
+        SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        return dataFormat.format(date).toString();
+    }
 
+    private boolean isTimeToUpdateAll() {
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        if ( day==1 ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-    public void updateAllShopType() {
+    private void updateAllShopType() {
         int lastShopId = 0;
         int failTimes = 0;
         while(failTimes<5){
@@ -73,7 +89,7 @@ public class ShopUpdateChecker {
 
     }
 
-    public void dailyUpdateShopType() {
+    private void dailyUpdateShopType() {
         try{
             SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date date = new Date();
