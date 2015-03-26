@@ -23,19 +23,20 @@ public class ShopStatusChangeMsgListener extends AbstractMsgListner {
     @Override
     public void onMessage(Message message) throws BackoutMessageException {
 
-        Map<String, Object> msg = parseMessage(message);
+        try {
 
-        if ( msg==null )
-            return;
+            Map<String, Object> msg = parseMessage(message);
 
-        Integer type = Ints.tryParse((String) msg.get("messageType"));
-        if ( type==null || type!=5 )
-            return;
+            if ( msg==null || msg.get("shopId")==null )
+                return;
 
+            Integer shopId = Ints.tryParse( msg.get("shopId")+"" );
 
-        Integer shopId = Ints.tryParse((String) msg.get("shopId"));
+            mWebRouterHandler.execute(shopId);
 
-        mWebRouterHandler.execute(shopId);
+        } catch (Exception e) {
+            logger.error("ShopStatusChangeMsgListener Error", e);
+        }
 
     }
 

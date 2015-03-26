@@ -1,4 +1,4 @@
-package com.dianping;
+package com.dianping.cell;
 
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;

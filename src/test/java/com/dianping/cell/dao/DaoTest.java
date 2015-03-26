@@ -1,8 +1,7 @@
-package com.dianping.dao;
+package com.dianping.cell.dao;
 
-import com.dianping.AbstractTest;
+import com.dianping.cell.AbstractTest;
 import com.dianping.cell.bean.ShopDto;
-import com.dianping.cell.dao.ShopDataDao;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,7 +15,7 @@ public class DaoTest extends AbstractTest {
 
 
     @Autowired
-    ShopDataDao shopDataDao;
+    private ShopDataDao shopDataDao;
 
 
     @Test
