@@ -30,7 +30,7 @@ public class ShopStatusChangeMsgListener extends AbstractMsgListner {
             if ( msg==null || msg.get("shopId")==null )
                 return;
 
-            Integer shopId = Ints.tryParse((String) msg.get("shopId"));
+            Integer shopId = Ints.tryParse( msg.get("shopId")+"" );
 
             mWebRouterHandler.execute(shopId);
 

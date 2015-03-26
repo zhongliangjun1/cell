@@ -29,7 +29,7 @@ public class PoiChangeShopMsgListener extends AbstractMsgListner {
 
             if ( msg==null || msg.get("messageType")==null ) return;
 
-            Integer type = Ints.tryParse((String) msg.get("messageType"));
+            Integer type = Ints.tryParse( msg.get("messageType")+"" );
 
             if ( type==null ) return;
 
@@ -37,13 +37,13 @@ public class PoiChangeShopMsgListener extends AbstractMsgListner {
 
             switch (type) {
                 case 2 : // POI 合并商户
-                    shopId = Ints.tryParse((String) msg.get("ShopID"));
+                    shopId = Ints.tryParse( msg.get("ShopID")+"" );
                     break;
                 case 4 : // POI 添加商户
-                    shopId = Ints.tryParse((String) msg.get("shopId"));
+                    shopId = Ints.tryParse( msg.get("shopId")+"" );
                     break;
                 case 5 : // POI 修改商户
-                    shopId = Ints.tryParse((String) msg.get("shopId"));
+                    shopId = Ints.tryParse( msg.get("shopId")+"" );
                     break;
                 default:
                     break;
