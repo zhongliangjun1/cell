@@ -1,5 +1,8 @@
 <html>
-<head></head>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+</head>
 
 <body>
 
@@ -7,29 +10,70 @@
 
 <h2>查询</h2>
 
-<form action="/read" method="post">
 
-    <p>shopId: <input type="text" name="shopId" /></p>
-    <input type="submit" value="Submit" />
+<p>shopId: <input class="shopid_read" type="text" name="shopId" /></p>
+<p class="read_result Hide"></p>
+<input type="submit" class="J_read" />
 
-</form>
 
 <h2>修改</h2>
 
-<form action="/update" method="post">
+<p>shopId: <input class="shopid_up" type="text" name="shopId" /></p>
+<p>type:
+    <select class="type_value" name="type">
+    <#list list as ty>
+        <option value="${ty}">${ty}</option>
+    </#list>
+    </select>
+</p>
+<p class="update_result Hide"></p>
+<input type="submit" class="J_up" />
 
-    <p>shopId: <input type="text" name="shopId" /></p>
-    <p>type:
-        <select  name="type">
-            <#list list as ty>
-                <option value="${ty}">${ty}</option>
-            </#list>
-        </select>
-    </p>
-    <input type="submit" value="Submit" />
+<script src="/js/zepto.js"></script>
+<script>
+    var read = $('.J_read');
+    read.on('click',function(e){
+        $.ajax({
+            type:'post',
+            url:'/read',
+            data:{ shopId:$('.shopid_read').val()},
+            dataType: 'json',
+            timeout: 2000,
+            success:function(data){
+                console.log(data);
+                if(data.code==200){
+                    $('.read_result').removeClass('Hide');
+                    $('.read_result').html('result : '+data.value);
+                }
+            }
+        });
+    });
 
-</form>
+    var update = $('.J_up');
+    update.on('click',function(e){
+        $.ajax({
+            type:'post',
+            url:'/update',
+            data:{ shopId:$('.shopid_up').val(),type:$('.type_value').val()},
+            dataType: 'json',
+            timeout: 2000,
+            success:function(data){
+                console.log(data);
+                if(data.code==200){
+                    $('.update_result').html('result : '+data.value);
+                }
+            }
+        });
+    });
 
+    $('.shopid_read').on('click',function(){
+        $('.read_result').html('');
+    });
+
+    $('.shopid_up').on('click',function(){
+        $('.update_result').html('');
+    });
+</script>
 
 </body>
 
