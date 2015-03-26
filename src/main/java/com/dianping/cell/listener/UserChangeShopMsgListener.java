@@ -23,19 +23,26 @@ public class UserChangeShopMsgListener extends AbstractMsgListner {
     @Override
     public void onMessage(Message message) throws BackoutMessageException {
 
-        Map<String, Object> msg = parseMessage(message);
+        try {
 
-        if ( msg==null )
-            return;
+            Map<String, Object> msg = parseMessage(message);
 
-        Integer type = Ints.tryParse(msg.get("type").toString());
-        if ( type==null || type!=201 )
-            return;
+            if ( msg==null || msg.get("type")==null || msg.get("shopId")==null )
+                return;
 
-        // 前台用户添加
-        Integer shopId = Ints.tryParse(msg.get("shopId").toString());
+            Integer type = Ints.tryParse(msg.get("type").toString());
+            if ( type==null || type!=201 )
+                return;
 
-        mWebRouterHandler.execute(shopId);
+            // 前台用户添加
+            Integer shopId = Ints.tryParse(msg.get("shopId").toString());
+
+            mWebRouterHandler.execute(shopId);
+
+        } catch (Exception e) {
+            logger.error("UserChangeShopMsgListener Error", e);
+        }
+
 
     }
 

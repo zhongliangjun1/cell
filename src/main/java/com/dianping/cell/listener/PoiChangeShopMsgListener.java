@@ -23,33 +23,39 @@ public class PoiChangeShopMsgListener extends AbstractMsgListner {
     @Override
     public void onMessage(Message message) throws BackoutMessageException {
 
-        Map<String, Object> msg = parseMessage(message);
+        try {
 
-        if ( msg==null ) return;
+            Map<String, Object> msg = parseMessage(message);
 
-        Integer type = Ints.tryParse((String) msg.get("messageType"));
+            if ( msg==null || msg.get("messageType")==null ) return;
 
-        if ( type==null ) return;
+            Integer type = Ints.tryParse((String) msg.get("messageType"));
 
-        Integer shopId = null;
+            if ( type==null ) return;
 
-        switch (type) {
-            case 2 : // POI 合并商户
-                shopId = Ints.tryParse((String) msg.get("ShopID"));
-                break;
-            case 4 : // POI 添加商户
-                shopId = Ints.tryParse((String) msg.get("shopId"));
-                break;
-            case 5 : // POI 修改商户
-                shopId = Ints.tryParse((String) msg.get("shopId"));
-                break;
-            default:
-                break;
+            Integer shopId = null;
+
+            switch (type) {
+                case 2 : // POI 合并商户
+                    shopId = Ints.tryParse((String) msg.get("ShopID"));
+                    break;
+                case 4 : // POI 添加商户
+                    shopId = Ints.tryParse((String) msg.get("shopId"));
+                    break;
+                case 5 : // POI 修改商户
+                    shopId = Ints.tryParse((String) msg.get("shopId"));
+                    break;
+                default:
+                    break;
+            }
+
+            if ( shopId==null ) return;
+
+            mWebRouterHandler.execute(shopId);
+
+        } catch (Exception e) {
+            logger.error("PoiChangeShopMsgListener Error", e);
         }
-
-        if ( shopId==null ) return;
-
-        mWebRouterHandler.execute(shopId);
 
 
     }
