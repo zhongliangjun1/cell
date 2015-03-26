@@ -1,0 +1,55 @@
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<!--
+		use in develop environment
+	-->
+	<constant name="struts.devMode" value="false" />
+	<constant name="struts.enable.DynamicMethodInvocation" value="false" />
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true" />
+	<constant name="struts.objectFactory"
+		value="org.apache.struts2.spring.StrutsSpringObjectFactory" />
+
+	<!-- I18N -->
+	<constant name="struts.custom.i18n.resources" value="config/i18n/globalMessages" />
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<constant name="struts.locale" value="zh_CN" />
+
+	<constant name="Struts.multipart.parse" value="jakarta" />
+	<constant name="struts.multipart.saveDir" value="/data/applogs/upload_temp" />
+	<constant name="struts.multipart.maxSize" value="50000000" />
+
+	<constant name="struts.action.excludePattern" value="/static/img/.*" />
+	<constant name="struts.freemarker.templatesCache" value="true" />
+	<constant name="struts.ui.templateSuffix" value="java" />
+	<constant name="struts.ui.theme" value="simple" />
+
+    <!--<constant name="struts.handle.exception" value="false" />-->
+
+    <package name="default" extends="avatar-json-default">
+        <interceptors>
+
+            <interceptor-stack name="logger">
+                <interceptor-ref name="params">
+                    <param name="excludeParams">dojo\..*,^struts\..*,.*\\.*,.*\(.*,.*\).*,.*@.*</param>
+                </interceptor-ref>
+                <interceptor-ref name="prepare" />
+            </interceptor-stack>
+
+
+        </interceptors>
+
+        <default-interceptor-ref name="logger" />
+
+
+
+		<global-results>
+			<result name="notFound" type="freemarker">/WEB-INF/pages/common/404.html</result>
+		</global-results>
+
+	</package>
+	<include file="config/struts/struts-*.xml" />
+</struts>

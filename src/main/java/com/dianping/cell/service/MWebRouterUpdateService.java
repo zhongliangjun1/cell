@@ -13,4 +13,6 @@ public interface MWebRouterUpdateService {
 
     public void update(int shopId, Type type);
 
+    public String read(int shopId);
+
 }

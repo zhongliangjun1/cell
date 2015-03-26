@@ -31,6 +31,22 @@ public class MWebRouterUpdateServiceImpl implements MWebRouterUpdateService {
         }
     }
 
+    @Override
+    public String read(int shopId) {
+        if ( shopId<0  ) return null;
+
+        ShardedJedis client = null;
+        String value = null;
+        try {
+            client = getResource();
+            value = client.get("mobile:wap:m:web:shop:"+shopId); // mobile:wap:m:web:shop:50000
+        } finally {
+            returnResource(client);
+        }
+
+        return value;
+    }
+
     @Autowired
     private ShardedJedisPool shardedJedisPool;
 
