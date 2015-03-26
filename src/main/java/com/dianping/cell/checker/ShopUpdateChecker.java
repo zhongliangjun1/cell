@@ -30,7 +30,7 @@ public class ShopUpdateChecker {
 
     public void process(){
 
-        if ( "y".equals(LionConfigUtils.getProperty("cell.ShopUpdateChecker.switch", "n")) )
+        if ( "n".equals(LionConfigUtils.getProperty("cell.ShopUpdateChecker.switch", "n")) )
             return;
 
         logger.info("ShopUpdateChecker Begin : " + getNowTime());
