@@ -28,19 +28,9 @@
 
 
 
-    <!-- Consumer -->
-    <bean id="messageConsumerFactory" class="com.dianping.swallow.consumer.impl.ConsumerFactoryImpl" factory-method="getInstance" />
-
-    <bean id="consumerConfig" class="com.dianping.swallow.consumer.ConsumerConfig">
-        <property name="threadPoolSize">
-            <value>1</value>
-        </property>
-    </bean>
 
 
-
-
-	<!-- 前台用户添加商户 -->
+	<!-- 前台用户添加商户 Consumer -->
     <bean id="userChangeShopMsgDest" class="com.dianping.swallow.common.message.Destination" factory-method="topic">
         <constructor-arg>
             <value>${dp-action-common.topic.name}</value>
@@ -48,7 +38,13 @@
     </bean>
     <bean id="userChangeShopMsgListener" class="com.dianping.cell.listener.UserChangeShopMsgListener" >
     </bean>
-    <bean id="userChangeShopMsgConsumerClient" factory-bean="messageConsumerFactory" factory-method="createConsumer" init-method="start">
+    <bean id="userChangeShopMsgConsumerFactory" class="com.dianping.swallow.consumer.impl.ConsumerFactoryImpl" factory-method="getInstance" />
+    <bean id="userChangeShopMsgConsumerConfig" class="com.dianping.swallow.consumer.ConsumerConfig">
+        <property name="threadPoolSize">
+            <value>1</value>
+        </property>
+    </bean>
+    <bean id="userChangeShopMsgConsumerClient" factory-bean="userChangeShopMsgConsumerFactory" factory-method="createConsumer" init-method="start">
         <constructor-arg>
             <ref bean="userChangeShopMsgDest" />
         </constructor-arg>
@@ -56,7 +52,7 @@
             <value>${cell.jms.clientId.prefix}</value>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="consumerConfig" />
+            <ref bean="userChangeShopMsgConsumerConfig" />
         </constructor-arg>
         <property name="listener">
             <ref local="userChangeShopMsgListener" />
@@ -66,7 +62,7 @@
 
 
 
-    <!-- POI更新商户 -->
+    <!-- POI更新商户 Consumer -->
     <bean id="poiChangeShopMsgDest" class="com.dianping.swallow.common.message.Destination" factory-method="topic">
         <constructor-arg>
             <value>dp_poi_change</value>
@@ -74,7 +70,13 @@
     </bean>
     <bean id="poiChangeShopMsgListener" class="com.dianping.cell.listener.PoiChangeShopMsgListener" >
     </bean>
-    <bean id="poiChangeShopMsgConsumerClient" factory-bean="messageConsumerFactory" factory-method="createConsumer" init-method="start">
+    <bean id="poiChangeShopMsgConsumerFactory" class="com.dianping.swallow.consumer.impl.ConsumerFactoryImpl" factory-method="getInstance" />
+    <bean id="poiChangeShopMsgConsumerConfig" class="com.dianping.swallow.consumer.ConsumerConfig">
+        <property name="threadPoolSize">
+            <value>1</value>
+        </property>
+    </bean>
+    <bean id="poiChangeShopMsgConsumerClient" factory-bean="poiChangeShopMsgConsumerFactory" factory-method="createConsumer" init-method="start">
         <constructor-arg>
             <ref bean="poiChangeShopMsgDest" />
         </constructor-arg>
@@ -82,7 +84,7 @@
             <value>${cell.jms.clientId.prefix}</value>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="consumerConfig" />
+            <ref bean="poiChangeShopMsgConsumerConfig" />
         </constructor-arg>
         <property name="listener">
             <ref local="poiChangeShopMsgListener" />
@@ -92,7 +94,7 @@
 
 
 
-    <!-- POI另一种更新商户 -->
+    <!-- POI另一种更新商户 Consumer -->
     <bean id="shopStatusChangeMsgDest" class="com.dianping.swallow.common.message.Destination" factory-method="topic">
         <constructor-arg>
             <value>dp_shop_status_change</value>
@@ -100,7 +102,13 @@
     </bean>
     <bean id="shopStatusChangeMsgListener" class="com.dianping.cell.listener.ShopStatusChangeMsgListener" >
     </bean>
-    <bean id="shopStatusChangeMsgConsumerClient" factory-bean="messageConsumerFactory" factory-method="createConsumer" init-method="start">
+    <bean id="shopStatusChangeMsgConsumerFactory" class="com.dianping.swallow.consumer.impl.ConsumerFactoryImpl" factory-method="getInstance" />
+    <bean id="shopStatusChangeMsgConsumerConfig" class="com.dianping.swallow.consumer.ConsumerConfig">
+        <property name="threadPoolSize">
+            <value>1</value>
+        </property>
+    </bean>
+    <bean id="shopStatusChangeMsgConsumerClient" factory-bean="shopStatusChangeMsgConsumerFactory" factory-method="createConsumer" init-method="start">
         <constructor-arg>
             <ref bean="shopStatusChangeMsgDest" />
         </constructor-arg>
@@ -108,7 +116,7 @@
             <value>${cell.jms.clientId.prefix}</value>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="consumerConfig" />
+            <ref bean="shopStatusChangeMsgConsumerConfig" />
         </constructor-arg>
         <property name="listener">
             <ref local="shopStatusChangeMsgListener" />
