@@ -27,13 +27,8 @@ public class ShopStatusChangeMsgListener extends AbstractMsgListner {
 
             Map<String, Object> msg = parseMessage(message);
 
-            if ( msg==null || msg.get("messageType")==null || msg.get("shopId")==null )
+            if ( msg==null || msg.get("shopId")==null )
                 return;
-
-            Integer type = Ints.tryParse((String) msg.get("messageType"));
-            if ( type==null || type!=5 )
-                return;
-
 
             Integer shopId = Ints.tryParse((String) msg.get("shopId"));
 
