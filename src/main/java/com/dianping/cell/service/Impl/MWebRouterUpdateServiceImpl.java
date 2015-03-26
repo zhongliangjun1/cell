@@ -25,7 +25,8 @@ public class MWebRouterUpdateServiceImpl implements MWebRouterUpdateService {
         ShardedJedis client = null;
         try {
             client = getResource();
-            client.set("mobile:wap:m:web:shop:"+shopId, type.value); // mobile:wap:m:web:shop:50000
+            String key = getRedisKey(shopId);
+            client.set(key, type.value);
         } finally {
             returnResource(client);
         }
@@ -39,12 +40,17 @@ public class MWebRouterUpdateServiceImpl implements MWebRouterUpdateService {
         String value = null;
         try {
             client = getResource();
-            value = client.get("mobile:wap:m:web:shop:"+shopId); // mobile:wap:m:web:shop:50000
+            String key = getRedisKey(shopId);
+            value = client.get(key);
         } finally {
             returnResource(client);
         }
 
         return value;
+    }
+
+    private String getRedisKey(int shopId) {
+        return "mobile:wap:m:web:shop:" + shopId;  // mobile:wap:m:web:shop:50000
     }
 
     @Autowired

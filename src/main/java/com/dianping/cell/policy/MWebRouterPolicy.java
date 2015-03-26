@@ -21,7 +21,7 @@ public class MWebRouterPolicy implements Policy {
     public Type judge(int shopId) {
 
         if ( isMallShop(shopId) )
-            return Type.SHOPPING;
+            return Type.BACKUP; //Type.SHOPPING; 暂未迁出
 
 
         return Type.MAIN;
