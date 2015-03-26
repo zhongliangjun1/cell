@@ -74,6 +74,48 @@
       <version>0.3.30.67</version>
     </dependency>
 
+      <dependency>
+          <groupId>org.apache.struts</groupId>
+          <artifactId>struts2-core</artifactId>
+          <version>${struts.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.struts</groupId>
+          <artifactId>struts2-spring-plugin</artifactId>
+          <version>${struts.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.struts</groupId>
+          <artifactId>struts2-javatemplates-plugin</artifactId>
+          <version>${struts.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.struts</groupId>
+          <artifactId>struts2-json-plugin</artifactId>
+          <version>2.3.8</version>
+      </dependency>
+      <dependency>
+          <groupId>com.dianping</groupId>
+          <artifactId>dp-common-web</artifactId>
+          <version>0.4.2</version>
+          <exclusions>
+              <exclusion>
+                  <groupId>com.dianping</groupId>
+                  <artifactId>avatar-common-remote</artifactId>
+              </exclusion>
+          </exclusions>
+      </dependency>
+      <dependency>
+          <groupId>com.google.protobuf</groupId>
+          <artifactId>protobuf-java</artifactId>
+          <version>2.4.0a</version>
+      </dependency>
+      <dependency>
+          <groupId>com.alibaba</groupId>
+          <artifactId>fastjson</artifactId>
+          <version>1.1.46</version>
+      </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
