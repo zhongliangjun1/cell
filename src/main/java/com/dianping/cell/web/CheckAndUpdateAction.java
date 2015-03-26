@@ -1,12 +1,12 @@
 package com.dianping.cell.web;
 
 import com.alibaba.fastjson.JSONObject;
-import com.dianping.cell.policy.MWebRouterPolicy;
 import com.dianping.cell.policy.Type;
 import com.dianping.cell.service.MWebRouterUpdateService;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,12 +19,10 @@ import java.util.List;
  */
 public class CheckAndUpdateAction extends BaseAction{
 
+    private Logger logger = Logger.getLogger(this.getClass());
 
     @Autowired
     private MWebRouterUpdateService mWebRouterUpdateService;
-
-    @Autowired
-    private MWebRouterPolicy mWebRouterPolicy;
 
     @Setter
     @Getter
@@ -44,7 +42,6 @@ public class CheckAndUpdateAction extends BaseAction{
             list.add(ty.value);
         }
 
-
         return SUCCESS;
     }
 
@@ -54,14 +51,25 @@ public class CheckAndUpdateAction extends BaseAction{
 
         JSONObject jsonObject = new JSONObject();
 
+        if( StringUtils.isNumeric(shopId) ){
 
-        if(StringUtils.isNumeric(shopId)){
-            String result = mWebRouterUpdateService.read(Integer.valueOf(shopId));
-            jsonObject.put("code","200");
-            jsonObject.put("value",result);
-        }else {
+            try {
+                String result = mWebRouterUpdateService.read(Integer.valueOf(shopId));
+                jsonObject.put("code","200");
+                if ( StringUtils.isNotBlank(result) ) {
+                    jsonObject.put("msg",result);
+                } else {
+                    jsonObject.put("msg","not in redis");
+                }
+            } catch (Exception e) {
+                jsonObject.put("code","500");
+                jsonObject.put("msg", e.toString());
+                logger.error("redis server error", e);
+            }
+
+        } else {
             jsonObject.put("code","201");
-            jsonObject.put("errmsg","wrong shopid");
+            jsonObject.put("msg","invalid shopId");
         }
 
         ServletActionContext.getResponse().getWriter().write(jsonObject.toString());
@@ -74,13 +82,21 @@ public class CheckAndUpdateAction extends BaseAction{
 
         JSONObject jsonObject = new JSONObject();
 
-        if(StringUtils.isNumeric(shopId)&&StringUtils.isNotBlank(type)){
-            mWebRouterUpdateService.update(Integer.valueOf(shopId),Type.getType(type));
-            jsonObject.put("code","200");
-            jsonObject.put("msg","success");
-        }else {
+        if( StringUtils.isNumeric(shopId) && StringUtils.isNotBlank(type) ){
+
+            try {
+                mWebRouterUpdateService.update(Integer.valueOf(shopId),Type.getType(type));
+                jsonObject.put("code","200");
+                jsonObject.put("msg","success");
+            } catch (Exception e) {
+                jsonObject.put("code","500");
+                jsonObject.put("msg", e.toString());
+                logger.error("redis server error", e);
+            }
+
+        } else {
             jsonObject.put("code","201");
-            jsonObject.put("errmsg","wrong shopid");
+            jsonObject.put("msg","invalid shopId");
         }
 
         ServletActionContext.getResponse().getWriter().write(jsonObject.toString());

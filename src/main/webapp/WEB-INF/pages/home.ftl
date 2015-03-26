@@ -41,10 +41,8 @@
             timeout: 2000,
             success:function(data){
                 console.log(data);
-                if(data.code==200){
-                    $('.read_result').removeClass('Hide');
-                    $('.read_result').html('result : '+data.value);
-                }
+                $('.read_result').removeClass('Hide');
+                $('.read_result').html('result : '+data.msg);
             }
         });
     });
@@ -59,9 +57,7 @@
             timeout: 2000,
             success:function(data){
                 console.log(data);
-                if(data.code==200){
-                    $('.update_result').html('result : '+data.value);
-                }
+                $('.update_result').html('result : '+data.msg);
             }
         });
     });
