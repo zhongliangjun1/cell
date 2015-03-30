@@ -74,7 +74,7 @@ public class ShopUpdateChecker {
                 if(CollectionUtils.isNotEmpty(shopDtoList)){
 
                     for(ShopDto shopDto : shopDtoList){
-                        mWebRouterHandler.equals(shopDto.getShopId());
+                        mWebRouterHandler.execute(shopDto.getShopId());
                     }
 
                     if(shopDtoList.size()<500){
@@ -108,7 +108,7 @@ public class ShopUpdateChecker {
                     }
                     if(CollectionUtils.isNotEmpty(shopDtoList)){
                         for(ShopDto shopDto : shopDtoList){
-                            mWebRouterHandler.equals(shopDto.getShopId());
+                            mWebRouterHandler.execute(shopDto.getShopId());
                         }
                         if(shopDtoList.size()<500){
                             break;
