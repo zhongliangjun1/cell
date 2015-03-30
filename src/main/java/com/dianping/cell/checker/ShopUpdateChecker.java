@@ -9,6 +9,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,6 +33,17 @@ public class ShopUpdateChecker {
 
         if ( "n".equals(LionConfigUtils.getProperty("cell.ShopUpdateChecker.switch", "n")) )
             return;
+
+        String serverName = null;
+        try {
+            InetAddress ia = InetAddress.getLocalHost();
+            serverName = ia.getHostName();//获取计算机主机名
+            if(!serverName.contains("01.nh")){
+                return;
+            }
+        }catch (Exception e){
+            Cat.logError("getgetLocalHost error ",e);
+        }
 
         logger.info("ShopUpdateChecker Begin : " + getNowTime());
 
