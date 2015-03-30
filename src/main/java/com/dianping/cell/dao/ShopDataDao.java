@@ -24,7 +24,7 @@ public interface ShopDataDao extends GenericDao {
     @DAOAction(action = DAOActionType.QUERY)
     public List<ShopCategory> loadShopCategory(@DAOParam("shopids") List<Integer> shopids);
 
-    @DAOAction(action = DAOActionType.QUERY)
+    @DAOAction(action = DAOActionType.LOAD)
     public ShopCategory loadSingleShopCategory(@DAOParam("shopId") int shopId);
 
     @DAOAction(action = DAOActionType.QUERY)

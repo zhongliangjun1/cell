@@ -28,7 +28,7 @@
 
     <resultMap id="shopCategory" class="com.dianping.cell.bean.ShopCategory">
         <result column="ShopID" property="shopId"/>
-        <result column="CategoryID" property="category"/>
+        <result column="CategoryID" property="mainCategoryId"/>
     </resultMap>
 
     <select id="loadShopCategory" resultMap="shopCategory" parameterClass="map">
