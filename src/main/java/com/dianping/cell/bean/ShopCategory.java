@@ -7,7 +7,7 @@ import lombok.Data;
  */
 @Data
 public class ShopCategory implements  Comparable<ShopCategory>{
-    private int shopId;
+    private Integer shopId;
     private Integer mainCategoryId;
 
     public ShopCategory(){}
