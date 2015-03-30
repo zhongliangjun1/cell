@@ -11,6 +11,14 @@
         <property name="timeout" value="5000"/>
     </bean>
 
+    <bean id="shopService" class="com.dianping.dpsf.spring.ProxyBeanFactory"
+          init-method="init">
+        <property name="serviceName" value="http://service.dianping.com/shopService/shopService_2.0.0" />
+        <property name="iface" value="com.dianping.shopremote.remote.ShopService" />
+        <property name="serialize" value="hessian" />
+        <property name="callMethod" value="sync" />
+        <property name="timeout" value="3000" />
+    </bean>
 
 
 </beans>

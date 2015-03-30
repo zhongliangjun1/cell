@@ -1,6 +1,9 @@
 package com.dianping.cell.policy;
 
+import com.dianping.cell.bean.ShopDto;
+import com.dianping.shopremote.remote.ShopService;
 import com.dianping.shopremote.remote.ShoppingMallService;
+import com.dianping.shopremote.remote.dto.ShopDTO;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,8 +23,12 @@ public class MWebRouterPolicy implements Policy {
     @Override
     public Type judge(int shopId) {
 
-        if ( isMallShop(shopId) )
+        if (isMallShop(shopId))
             return Type.BACKUP; //Type.SHOPPING; 暂未迁出
+
+        if (isWeddingOrMovie(shopId)) {
+            return Type.BACKUP;
+        }
 
 
         return Type.MAIN;
@@ -38,10 +45,45 @@ public class MWebRouterPolicy implements Policy {
         return result;
     }
 
+    private boolean isWeddingOrMovie(int shopId) {
+        ShopDTO shopDto;
+        boolean result = false;
 
+        try {
+            shopDto = shopService.loadShop(shopId);
+            if (shopDto != null) {
+                int shopType = shopDto.getShopType() != null ? shopDto.getShopType().intValue() : 0;
+
+                //wedding
+                if (shopType == 55 || shopType == 70 || shopType == 90) {
+                    result = true;
+                }
+
+                if (shopType == 50 && 6700 == shopDto.getMainCategoryId()) {
+                    result = true;
+                }
+
+                //movie
+                if (136 == shopDto.getMainCategoryId()) {
+                    result = true;
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error("shopService error", e);
+        }
+
+
+        return result;
+
+
+    }
 
 
     @Autowired
     private ShoppingMallService shoppingMallService;
+
+    @Autowired
+    private ShopService shopService;
 
 }
