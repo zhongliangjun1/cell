@@ -14,10 +14,34 @@
         WHERE   ShopID > #lastShopId# order by ShopID ASC limit 500
     </select>
 
+    <select id="loadSingleShop" resultMap="shop" parameterClass="map">
+        SELECT ShopID,ShopType
+        FROM DP_Shop
+        WHERE   ShopID = #shopId# limit 1
+    </select>
+
     <select id="loadIncreaseShop" resultMap="shop" parameterClass="map">
         SELECT ShopID,ShopType
         FROM DP_Shop
         WHERE ShopID > #lastShopId# and LastDate between  #beginTime# and #endTime# order by ShopID limit 500
+    </select>
+
+    <resultMap id="shopCategory" class="com.dianping.mobile.job.bean.ShopCategory">
+        <result column="ShopID" property="shopId"/>
+        <result column="CategoryID" property="category"/>
+    </resultMap>
+
+    <select id="loadShopCategory" resultMap="shopCategory" parameterClass="map">
+        select ShopID,CategoryID
+        from DP_ShopCategory where ShopID in
+        <iterate property="shopids" open="(" close=")" conjunction=",">
+            #shopids[]#
+        </iterate>  and IsMain=1
+    </select>
+
+    <select id="loadSingleShopCategory" resultMap="shopCategory" parameterClass="map">
+        select ShopID,CategoryID
+        from DP_ShopCategory where ShopID = #shopId#  and IsMain=1 limit 1
     </select>
 
 

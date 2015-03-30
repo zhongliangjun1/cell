@@ -1,6 +1,7 @@
 package com.dianping.cell.checker;
 
 import com.dianping.cat.Cat;
+import com.dianping.cell.bean.ShopCategory;
 import com.dianping.cell.bean.ShopDto;
 import com.dianping.cell.dao.ShopDataDao;
 import com.dianping.cell.handler.MWebRouterHandler;
@@ -11,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by withnate on 15-3-25.
@@ -85,6 +84,8 @@ public class ShopUpdateChecker {
                 }
                 if(CollectionUtils.isNotEmpty(shopDtoList)){
 
+                    shopDtoList = (List<ShopDto>) assembleShop(shopDtoList);
+
                     for(ShopDto shopDto : shopDtoList){
                         mWebRouterHandler.execute(shopDto.getShopId());
                     }
@@ -118,6 +119,9 @@ public class ShopUpdateChecker {
                         failTimes++;
                         continue;
                     }
+
+                    shopDtoList = (List<ShopDto>) assembleShop(shopDtoList);
+
                     if(CollectionUtils.isNotEmpty(shopDtoList)){
                         for(ShopDto shopDto : shopDtoList){
                             mWebRouterHandler.execute(shopDto.getShopId());
@@ -134,6 +138,33 @@ public class ShopUpdateChecker {
         }catch (Exception e){
             Cat.logError("dailyUpdateShopType",e);
         }
+    }
+
+    public List<? extends ShopCategory> assembleShop(List<? extends  ShopCategory> shopList) {
+        try {
+            List<Integer> shopids = new ArrayList<Integer>();
+            for (ShopCategory shop : shopList) {
+                shopids.add(shop.getShopId());
+            }
+            List<ShopCategory> shopCategoryList = shopDataDao.loadShopCategory(shopids);
+            Collections.sort(shopCategoryList, new Comparator<ShopCategory>() {
+                @Override
+                public int compare(ShopCategory o1, ShopCategory o2) {
+                    return o1.getShopId() - o2.getShopId();
+                }
+            });
+            for (ShopCategory shop : shopList) {
+                int index = Collections.binarySearch(shopCategoryList, new ShopCategory(shop.getShopId()));
+                if (index > -1 && index < shopList.size()) {
+                    shop.setMainCategoryId(shopCategoryList.get(index).getMainCategoryId());
+                }
+            }
+
+        }catch (Exception e){
+            System.out.println("assembleShop error "+e.getMessage());
+            Cat.logError("assembleShop error",e);
+        }
+        return shopList;
     }
 
 }

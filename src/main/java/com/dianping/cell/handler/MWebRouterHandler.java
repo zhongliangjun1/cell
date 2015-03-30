@@ -27,5 +27,4 @@ public class MWebRouterHandler extends Handler {
         if ( type==null ) type = Type.MAIN;
         mWebRouterUpdateService.update(shopId, type);
     }
-
 }
