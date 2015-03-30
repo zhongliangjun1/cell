@@ -1,6 +1,5 @@
 package com.dianping.cell.policy;
 
-import com.dianping.cell.bean.ShopDto;
 import com.dianping.shopremote.remote.ShopService;
 import com.dianping.shopremote.remote.ShoppingMallService;
 import com.dianping.shopremote.remote.dto.ShopDTO;
@@ -26,7 +25,11 @@ public class MWebRouterPolicy implements Policy {
         if (isMallShop(shopId))
             return Type.BACKUP; //Type.SHOPPING; 暂未迁出
 
-        if (isWeddingOrMovie(shopId)) {
+        if (isWeddingShop(shopId)) {
+            return Type.BACKUP;
+        }
+
+        if (isMovieShop(shopId)) {
             return Type.BACKUP;
         }
 
@@ -45,13 +48,13 @@ public class MWebRouterPolicy implements Policy {
         return result;
     }
 
-    private boolean isWeddingOrMovie(int shopId) {
-        ShopDTO shopDto;
+    private boolean isWeddingShop(int shopId) {
         boolean result = false;
 
         try {
-            shopDto = shopService.loadShop(shopId);
+            ShopDTO shopDto = shopService.loadShop(shopId);
             if (shopDto != null) {
+
                 int shopType = shopDto.getShopType() != null ? shopDto.getShopType().intValue() : 0;
 
                 //wedding
@@ -63,20 +66,27 @@ public class MWebRouterPolicy implements Policy {
                     result = true;
                 }
 
-                //movie
-                if (136 == shopDto.getMainCategoryId()) {
-                    result = true;
-                }
             }
-
         } catch (Exception e) {
             logger.error("shopService error", e);
         }
 
+        return result;
+    }
+
+    private boolean isMovieShop(int shopId) {
+        boolean result = false;
+
+        try {
+            ShopDTO shopDto = shopService.loadShop(shopId);
+            if (shopDto != null && 136 == shopDto.getMainCategoryId()) {
+                result = true;
+            }
+        } catch (Exception e) {
+            logger.error("shopService error", e);
+        }
 
         return result;
-
-
     }
 
 
