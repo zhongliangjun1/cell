@@ -26,7 +26,7 @@
         WHERE ShopID > #lastShopId# and LastDate between  #beginTime# and #endTime# order by ShopID limit 500
     </select>
 
-    <resultMap id="shopCategory" class="com.dianping.mobile.job.bean.ShopCategory">
+    <resultMap id="shopCategory" class="com.dianping.cell.bean.ShopCategory">
         <result column="ShopID" property="shopId"/>
         <result column="CategoryID" property="category"/>
     </resultMap>
