@@ -6,6 +6,9 @@ import com.dianping.cell.service.MWebRouterUpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created with IntelliJ IDEA.
  * Author: liangjun.zhong
@@ -26,5 +29,18 @@ public class MWebRouterHandler extends Handler {
         Type type = mWebRouterPolicy.judge(shopId);
         if ( type==null ) type = Type.MAIN;
         mWebRouterUpdateService.update(shopId, type);
+    }
+
+    @Override
+    protected void handle(List<Integer> shopIds) {
+        Map<Integer,Type> result =  mWebRouterPolicy.judge(shopIds);
+        if ( result==null || result.isEmpty()  )
+            return;
+
+        for (Integer shopId : shopIds) {
+            Type type = result.get(shopId);
+            if ( type==null ) type = Type.MAIN;
+            mWebRouterUpdateService.update(shopId, type);
+        }
     }
 }

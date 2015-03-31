@@ -1,6 +1,10 @@
 package com.dianping.cell.handler;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,6 +19,8 @@ public abstract class Handler {
 
     protected abstract void handle(int shopId);
 
+    protected abstract void handle(List<Integer> shopIds);
+
     public boolean execute(int shopId) {
         try {
             handle(shopId);
@@ -24,5 +30,21 @@ public abstract class Handler {
             return false;
         }
     }
+
+    public boolean execute(List<Integer> shopIds) {
+
+        if (CollectionUtils.isEmpty(shopIds))
+            return false;
+
+        try {
+            handle(shopIds);
+            return true;
+        } catch (Exception e) {
+            logger.error("handle "+ StringUtils.join(shopIds, ",") +" with some error", e);
+            return false;
+        }
+
+    }
+
 
 }
