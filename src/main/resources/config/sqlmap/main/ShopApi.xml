@@ -3,8 +3,8 @@
 <sqlMap namespace="ShopData">
 
     <resultMap id="shop" class="com.dianping.cell.bean.ShopDto">
-        <result column="ShopID" property="shopId" />
-        <result column="ShopType" property="shopType" />
+        <result column="ShopID" property="shopId" nullValue="0" />
+        <result column="ShopType" property="shopType" nullValue="0" />
     </resultMap>
 
 
@@ -36,8 +36,8 @@
     </select>
 
     <resultMap id="shopCategory" class="com.dianping.cell.bean.ShopCategory">
-        <result column="ShopID" property="shopId"/>
-        <result column="CategoryID" property="mainCategoryId"/>
+        <result column="ShopID" property="shopId" nullValue="0"/>
+        <result column="CategoryID" property="mainCategoryId" nullValue="0"/>
     </resultMap>
 
     <select id="loadShopCategory" resultMap="shopCategory" parameterClass="map">
