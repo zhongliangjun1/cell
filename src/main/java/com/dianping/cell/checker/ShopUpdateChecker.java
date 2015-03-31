@@ -5,6 +5,7 @@ import com.dianping.cell.bean.ShopDto;
 import com.dianping.cell.dao.ShopDataDao;
 import com.dianping.cell.handler.MWebRouterHandler;
 import com.dianping.combiz.spring.util.LionConfigUtils;
+import com.google.common.primitives.Ints;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,8 +82,9 @@ public class ShopUpdateChecker {
 
     private boolean isTimeToUpdateAll() {
         Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-        if ( day==1 ) {
+        int day = calendar.get(Calendar.DAY_OF_WEEK)-1;
+        int time = Ints.tryParse(LionConfigUtils.getProperty("cell.TimeToUpdateAll.week"));
+        if ( day==time ) {
             return true;
         } else {
             return false;
