@@ -9,9 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -53,6 +51,33 @@ public class MWebRouterPolicy extends Policy {
     @Override
     public Map<Integer,Type> judge(List<Integer> shopIds) {
         Map<Integer,Type> result = new HashMap<Integer, Type>();
+        try {
+            List<ShopDto> shopDtoList = shopDataDao.loadShops(shopIds);
+            shopDtoList = (List<ShopDto>) assembleShop(shopDtoList,shopIds);
+
+            if(shopDtoList!=null){
+                for(ShopDto shopDto : shopDtoList){
+                    if ( isMallShop(shopDto.getShopId()) ) {
+                        result.put(shopDto.getShopId(),Type.BACKUP);//Type.SHOPPING; 暂未迁出
+                        break;
+                    }
+
+                    if ( isWeddingShop(shopDto) ) {
+                        result.put(shopDto.getShopId(),Type.BACKUP);
+                        break;
+                    }
+
+                    if ( isMovieShop(shopDto) ) {
+                        result.put(shopDto.getShopId(),Type.BACKUP);
+                        break;
+                    }
+                    result.put(shopDto.getShopId(),Type.MAIN);
+                }
+            }
+        }catch (Exception e){
+            Cat.logError("judge shopids error",e);
+        }
+
 
         return result;
     }
@@ -116,6 +141,29 @@ public class MWebRouterPolicy extends Policy {
             logger.error("shopService error", e);
         }
         return result;
+    }
+
+    public List<? extends ShopCategory> assembleShop(List<? extends  ShopCategory> shopList,List<Integer> shopIds) {
+        try {
+            List<ShopCategory> shopCategoryList = shopDataDao.loadShopCategory(shopIds);
+            Collections.sort(shopCategoryList, new Comparator<ShopCategory>() {
+                @Override
+                public int compare(ShopCategory o1, ShopCategory o2) {
+                    return o1.getShopId() - o2.getShopId();
+                }
+            });
+            for (ShopCategory shop : shopList) {
+                int index = Collections.binarySearch(shopCategoryList, new ShopCategory(shop.getShopId()));
+                if (index > -1 && index < shopList.size()) {
+                    shop.setMainCategoryId(shopCategoryList.get(index).getMainCategoryId());
+                }
+            }
+
+        }catch (Exception e){
+            System.out.println("assembleShop error "+e.getMessage());
+            Cat.logError("assembleShop error", e);
+        }
+        return shopList;
     }
 
 

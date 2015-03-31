@@ -14,6 +14,15 @@
         WHERE   ShopID > #lastShopId# order by ShopID ASC limit 500
     </select>
 
+    <select id="loadShops" resultMap="shop" parameterClass="map">
+        SELECT ShopID,ShopType
+        FROM DP_Shop
+        WHERE   ShopID in
+        <iterate property="shopids" open="(" close=")" conjunction=",">
+            #shopids[]#
+        </iterate>
+    </select>
+
     <select id="loadSingleShop" resultMap="shop" parameterClass="map">
         SELECT ShopID,ShopType
         FROM DP_Shop
