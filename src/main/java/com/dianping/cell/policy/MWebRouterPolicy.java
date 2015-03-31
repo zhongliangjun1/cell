@@ -9,6 +9,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created with IntelliJ IDEA.
  * Author: liangjun.zhong
@@ -17,7 +21,7 @@ import org.springframework.stereotype.Component;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-public class MWebRouterPolicy implements Policy {
+public class MWebRouterPolicy extends Policy {
 
     private Logger logger = Logger.getLogger(MWebRouterPolicy.class);
 
@@ -44,6 +48,13 @@ public class MWebRouterPolicy implements Policy {
 
 
         return Type.MAIN;
+    }
+
+    @Override
+    public Map<Integer,Type> judge(List<Integer> shopIds) {
+        Map<Integer,Type> result = new HashMap<Integer, Type>();
+
+        return result;
     }
 
     private ShopDto getShopDto(int shopId){
