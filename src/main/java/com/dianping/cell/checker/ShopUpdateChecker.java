@@ -4,7 +4,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cell.bean.ShopDto;
 import com.dianping.cell.dao.ShopDataDao;
 import com.dianping.cell.handler.MWebRouterHandler;
-import com.dianping.cell.web.JobUtil;
 import com.dianping.combiz.spring.util.LionConfigUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -21,6 +20,8 @@ public class ShopUpdateChecker {
 
     private Logger logger = Logger.getLogger(this.getClass());
 
+    private volatile static boolean flag = true;
+
     @Autowired
     private ShopDataDao shopDataDao;
 
@@ -36,9 +37,9 @@ public class ShopUpdateChecker {
         if ( !should_I_process() )
             return;
 
-        if(JobUtil.flag) {
+        if( flag ) {
 
-            JobUtil.flag = false;
+            flag = false;
 
             logger.info("ShopUpdateChecker Begin : " + getNowTime());
 
@@ -48,7 +49,7 @@ public class ShopUpdateChecker {
                 dailyUpdateShopType();
             }
 
-            JobUtil.flag = true;
+            flag = true;
 
             logger.info("ShopUpdateChecker End : " + getNowTime());
 

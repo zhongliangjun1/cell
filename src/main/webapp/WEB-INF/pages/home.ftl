@@ -7,6 +7,7 @@
 <body>
 
 <h1>Welcome cell !</h1>
+<p>当前 redis 记录总数 : ${count}</p>
 
 <h2>查询</h2>
 

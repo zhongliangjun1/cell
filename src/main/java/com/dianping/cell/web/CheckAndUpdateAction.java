@@ -33,6 +33,9 @@ public class CheckAndUpdateAction extends BaseAction{
     String type;
 
     @Getter
+    long count;
+
+    @Getter
     List<String> list = new ArrayList<String>();
 
 
@@ -41,6 +44,8 @@ public class CheckAndUpdateAction extends BaseAction{
         for(Type ty : Type.values()){
             list.add(ty.value);
         }
+
+        count = mWebRouterUpdateService.count();
 
         return SUCCESS;
     }
