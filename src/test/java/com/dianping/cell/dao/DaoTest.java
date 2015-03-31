@@ -2,6 +2,7 @@ package com.dianping.cell.dao;
 
 import com.dianping.cat.Cat;
 import com.dianping.cell.AbstractTest;
+import com.dianping.cell.bean.ShopCategory;
 import com.dianping.cell.bean.ShopDto;
 import com.dianping.cell.handler.MWebRouterHandler;
 import org.apache.commons.collections.CollectionUtils;
@@ -9,8 +10,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 public class DaoTest extends AbstractTest {
@@ -27,7 +27,17 @@ public class DaoTest extends AbstractTest {
     @Test
     public void testLoadUserByUserId() {
 
-//        List<ShopDto> shopDtoList = shopDataDao.loadShop(0);
+        List<ShopDto> shopDtoList = shopDataDao.loadShop(510000);
+        List<Integer> shopIds = new ArrayList<Integer>();
+        for(ShopDto shopDto : shopDtoList){
+            shopIds.add(shopDto.getShopId());
+        }
+        shopDtoList = (List<ShopDto>) assembleShop(shopDtoList,shopIds);
+        for(ShopDto shopDto : shopDtoList){
+            shopIds.add(shopDto.getShopId());
+            System.out.println(shopDto.toString());
+        }
+
 //
 //        System.out.println("read result : "+shopDtoList.size());
 //
@@ -42,34 +52,57 @@ public class DaoTest extends AbstractTest {
 //        System.out.println("read result : "+shopDtoList2.size());
 
 
-        int lastShopId = 0;
-        int failTimes = 0;
-        int i=0;
-        while(failTimes<5&&i<5){
-            try{
-                List<ShopDto> shopDtoList = shopDataDao.loadShop(lastShopId);
-                if(shopDtoList==null){
-                    failTimes++;
-                    continue;
+//        int lastShopId = 0;
+//        int failTimes = 0;
+//        int i=0;
+//        while(failTimes<5&&i<5){
+//            try{
+//                List<ShopDto> shopDtoList = shopDataDao.loadShop(lastShopId);
+//                if(shopDtoList==null){
+//                    failTimes++;
+//                    continue;
+//                }
+//                if(CollectionUtils.isNotEmpty(shopDtoList)){
+//
+////                    shopDtoList = (List<ShopDto>) assembleShop(shopDtoList);
+//
+//                    for(ShopDto shopDto : shopDtoList){
+//                        mWebRouterHandler.execute(shopDto.getShopId());
+//                    }
+//
+//                    if(shopDtoList.size()<500){
+//                        break;
+//                    }
+//                }
+//            }catch (Exception e){
+//                failTimes++;
+//                Cat.logError("loadShop", e);
+//            }
+//        }
+
+    }
+
+    public List<? extends ShopCategory> assembleShop(List<? extends  ShopCategory> shopList,List<Integer> shopIds) {
+        try {
+            List<ShopCategory> shopCategoryList = shopDataDao.loadShopCategory(shopIds);
+            Collections.sort(shopCategoryList, new Comparator<ShopCategory>() {
+                @Override
+                public int compare(ShopCategory o1, ShopCategory o2) {
+                    return o1.getShopId() - o2.getShopId();
                 }
-                if(CollectionUtils.isNotEmpty(shopDtoList)){
-
-//                    shopDtoList = (List<ShopDto>) assembleShop(shopDtoList);
-
-                    for(ShopDto shopDto : shopDtoList){
-                        mWebRouterHandler.execute(shopDto.getShopId());
-                    }
-
-                    if(shopDtoList.size()<500){
-                        break;
-                    }
+            });
+            for (ShopCategory shop : shopList) {
+                int index = Collections.binarySearch(shopCategoryList, new ShopCategory(shop.getShopId()));
+                if (index > -1 && index < shopList.size()) {
+                    shop.setMainCategoryId(shopCategoryList.get(index).getMainCategoryId());
                 }
-            }catch (Exception e){
-                failTimes++;
-                Cat.logError("loadShop", e);
             }
-        }
 
+        }catch (Exception e){
+            System.out.println("assembleShop error "+e.getMessage());
+            Cat.logError("assembleShop error", e);
+        }
+        return shopList;
     }
 
 
