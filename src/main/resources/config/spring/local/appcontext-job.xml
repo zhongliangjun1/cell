@@ -20,7 +20,8 @@
             <ref bean="shopUpdateCheckerJobDetail"/>
         </property>
         <property name="cronExpression">
-            <value>* * * 1/1 * ? </value>
+            <!--<value>* * * 1/1 * ? </value>-->
+            <value>${cell.shopUpdateCheckerJobTrigger}</value>
         </property>
     </bean>
 

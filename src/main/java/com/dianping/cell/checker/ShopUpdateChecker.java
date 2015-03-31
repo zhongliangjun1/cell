@@ -33,16 +33,8 @@ public class ShopUpdateChecker {
         if ( "n".equals(LionConfigUtils.getProperty("cell.ShopUpdateChecker.switch", "n")) )
             return;
 
-        String serverName = null;
-        try {
-            InetAddress ia = InetAddress.getLocalHost();
-            serverName = ia.getHostName();//获取计算机主机名
-            if(!serverName.contains("01.nh")){
-                return;
-            }
-        }catch (Exception e){
-            Cat.logError("getgetLocalHost error ",e);
-        }
+        if ( !should_I_process() )
+            return;
 
         if(JobUtil.flag) {
 
@@ -62,6 +54,22 @@ public class ShopUpdateChecker {
 
         }
 
+    }
+
+    private boolean should_I_process() {
+        boolean result = false;
+
+        try {
+            InetAddress ia = InetAddress.getLocalHost();
+            String serverName = ia.getHostName(); //获取计算机主机名
+            if( serverName.contains(LionConfigUtils.getProperty("cell.checker.process.machine.name")) ){
+                result = true;
+            }
+        }catch (Exception e){
+            logger.error("get serverName error ", e);
+        }
+
+        return result;
     }
 
     private String getNowTime() {
