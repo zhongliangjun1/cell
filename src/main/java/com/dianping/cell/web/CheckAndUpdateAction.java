@@ -86,8 +86,9 @@ public class CheckAndUpdateAction extends BaseAction{
 
             try {
                 mWebRouterUpdateService.update(Integer.valueOf(shopId),Type.getType(type));
+                String result = mWebRouterUpdateService.read(Integer.valueOf(shopId));
                 jsonObject.put("code","200");
-                jsonObject.put("msg","success");
+                jsonObject.put("msg","success! Now "+shopId+" type is "+result);
             } catch (Exception e) {
                 jsonObject.put("code","500");
                 jsonObject.put("msg", e.toString());
