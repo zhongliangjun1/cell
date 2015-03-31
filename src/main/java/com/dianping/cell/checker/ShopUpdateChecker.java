@@ -92,6 +92,8 @@ public class ShopUpdateChecker {
         int lastShopId = 0;
         int failTimes = 0;
         while(failTimes<5){
+            if ( "n".equals(LionConfigUtils.getProperty("cell.ShopUpdateChecker.switch", "n")) )
+                return;
             try{
                 List<ShopDto> shopDtoList = shopDataDao.loadShop(lastShopId);
                 if(shopDtoList==null){
