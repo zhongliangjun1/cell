@@ -116,6 +116,8 @@ public class ShopUpdateChecker {
                     if(shopDtoList.size()<500){
                         break;
                     }
+
+                    lastShopId = shopDtoList.get( shopDtoList.size()-1 ).getShopId();
                 }
             }catch (Exception e){
                 failTimes++;
@@ -150,6 +152,7 @@ public class ShopUpdateChecker {
                     if(shopDtoList.size()<500){
                         break;
                     }
+                    lastShopId = shopDtoList.get( shopDtoList.size()-1 ).getShopId();
                 }catch (Exception e){
                     failTimes++;
                     Cat.logError("loadShop", e);
