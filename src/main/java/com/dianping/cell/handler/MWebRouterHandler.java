@@ -3,6 +3,7 @@ package com.dianping.cell.handler;
 import com.dianping.cell.policy.MWebRouterPolicy;
 import com.dianping.cell.policy.Type;
 import com.dianping.cell.service.MWebRouterUpdateService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +30,7 @@ public class MWebRouterHandler extends Handler {
         Type type = mWebRouterPolicy.judge(shopId);
         if ( type==null ) type = Type.MAIN;
         mWebRouterUpdateService.update(shopId, type);
+        logger.info("handle shop : "+ shopId +" success");
     }
 
     @Override
@@ -42,5 +44,7 @@ public class MWebRouterHandler extends Handler {
             if ( type==null ) type = Type.MAIN;
             mWebRouterUpdateService.update(shopId, type);
         }
+
+        logger.info("handle shops : " + StringUtils.join(shopIds, ",") + " success");
     }
 }
