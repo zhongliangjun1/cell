@@ -15,4 +15,6 @@ public interface MWebRouterUpdateService {
 
     public String read(int shopId);
 
+    public long count();
+
 }

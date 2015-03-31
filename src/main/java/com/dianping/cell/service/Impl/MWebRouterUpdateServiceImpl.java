@@ -4,8 +4,8 @@ import com.dianping.cell.policy.Type;
 import com.dianping.cell.service.MWebRouterUpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.ShardedJedis;
-import redis.clients.jedis.ShardedJedisPool;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,7 +22,7 @@ public class MWebRouterUpdateServiceImpl implements MWebRouterUpdateService {
 
         if ( shopId<0 || type==null ) return;
 
-        ShardedJedis client = null;
+        Jedis client = null;
         try {
             client = getResource();
             String key = getRedisKey(shopId);
@@ -36,7 +36,7 @@ public class MWebRouterUpdateServiceImpl implements MWebRouterUpdateService {
     public String read(int shopId) {
         if ( shopId<0  ) return null;
 
-        ShardedJedis client = null;
+        Jedis client = null;
         String value = null;
         try {
             client = getResource();
@@ -49,20 +49,33 @@ public class MWebRouterUpdateServiceImpl implements MWebRouterUpdateService {
         return value;
     }
 
+    @Override
+    public long count() {
+        Jedis client = null;
+        long count = 0;
+        try {
+            client = getResource();
+            count = client.dbSize();
+        } finally {
+            returnResource(client);
+        }
+        return count;
+    }
+
     private String getRedisKey(int shopId) {
         return "mobile:wap:m:web:shop:" + shopId;  // mobile:wap:m:web:shop:50000
     }
 
     @Autowired
-    private ShardedJedisPool shardedJedisPool;
+    private JedisPool jedisPool;
 
-    private ShardedJedis getResource(){
-        return shardedJedisPool.getResource();
+    private Jedis getResource(){
+        return jedisPool.getResource();
     }
 
-    private void returnResource(ShardedJedis resource){
+    private void returnResource(Jedis resource){
         if (resource!=null) {
-            shardedJedisPool.returnResource(resource);
+            jedisPool.returnResource(resource);
         }
     }
 

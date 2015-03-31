@@ -29,32 +29,36 @@
         <property name="testOnBorrow"  value="${cell.redis.pool.testOnBorrow}" />
     </bean>
 
-    <!-- jedis 多个服务器配置-->
-    <bean id="jedisShardInfo1" class="redis.clients.jedis.JedisShardInfo">
-        <constructor-arg index="0" value="${cell.redis1.ip}" />
-        <constructor-arg index="1" value="${cell.redis.port}" type="int" />
+    <!-- pool -->
+    <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+        <constructor-arg index="0" ref="jedisPoolConfig" />
+        <constructor-arg index="1" value="${cell.redis1.ip}" />
+        <constructor-arg index="2" value="${cell.redis.port}" />
     </bean>
+
+
+
+    <!-- jedis 多个服务器配置-->
+    <!--<bean id="jedisShardInfo1" class="redis.clients.jedis.JedisShardInfo">-->
+        <!--<constructor-arg index="0" value="${cell.redis1.ip}" />-->
+        <!--<constructor-arg index="1" value="${cell.redis.port}" type="int" />-->
+    <!--</bean>-->
 
     <!--<bean id="jedisShardInfo2" class="redis.clients.jedis.JedisShardInfo">-->
         <!--<constructor-arg index="0" value="${redis2.ip}" />-->
         <!--<constructor-arg index="1" value="${redis.port}" type="int" />-->
     <!--</bean>-->
 
-
-
     <!-- pool -->
-    <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
-        <constructor-arg index="0" ref="jedisPoolConfig" />
-        <constructor-arg index="1">
-            <list>
-                <ref bean="jedisShardInfo1" />
-                <!--<ref bean="jedisShardInfo2"/>-->
-            </list>
-        </constructor-arg>
-    </bean>
-
-
-
+    <!--<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">-->
+        <!--<constructor-arg index="0" ref="jedisPoolConfig" />-->
+        <!--<constructor-arg index="1">-->
+            <!--<list>-->
+                <!--<ref bean="jedisShardInfo1" />-->
+                <!--&lt;!&ndash;<ref bean="jedisShardInfo2"/>&ndash;&gt;-->
+            <!--</list>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
 
 
 
