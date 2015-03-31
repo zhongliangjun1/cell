@@ -15,6 +15,9 @@
         <action name="update" class="com.dianping.cell.web.CheckAndUpdateAction" method="update">
         </action>
 
+        <action name="run" class="com.dianping.cell.web.RunJobAction" method="run">
+        </action>
+
 
     </package>
 </struts>
