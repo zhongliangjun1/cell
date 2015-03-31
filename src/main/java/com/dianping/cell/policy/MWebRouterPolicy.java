@@ -87,7 +87,7 @@ public class MWebRouterPolicy extends Policy {
         try{
             shopDto = shopDataDao.loadSingleShop(shopId);
             ShopCategory shopCategory = shopDataDao.loadSingleShopCategory(shopId);
-            if(shopCategory!=null&&shopDto!=null){
+            if( shopCategory!=null && shopDto!=null && shopCategory.getMainCategoryId()!=null ){
                 shopDto.setMainCategoryId(shopCategory.getMainCategoryId());
             }
         }catch (Exception e){
