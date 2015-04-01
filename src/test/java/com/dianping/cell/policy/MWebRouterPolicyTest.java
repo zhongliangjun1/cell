@@ -24,11 +24,17 @@ public class MWebRouterPolicyTest extends AbstractTest {
     public void test() {
 
         List<Integer> shopIds = new ArrayList<Integer>();
-        shopIds.add(500000);
+        shopIds.add(500000);   // 美食
+        shopIds.add(4728270);  // 购物
+        shopIds.add(1575769); // 结婚
+        shopIds.add(1796965);  // 电影
 
         Map<Integer,Type> result = mWebRouterPolicy.judge(shopIds);
 
-        System.out.println(result.get(500000));
+        System.out.println("500000 type is : " + result.get(500000));
+        System.out.println("4728270 type is : " + result.get(4728270));
+        System.out.println("1575769 type is : " + result.get(1575769));
+        System.out.println("1796965 type is : " + result.get(1796965));
 
     }
 

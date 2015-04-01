@@ -65,17 +65,17 @@ public class MWebRouterPolicy extends Policy {
 
                     if ( isMallShop(shopId) ) {
                         result.put(shopId, Type.BACKUP);
-                        break;
+                        continue;
                     }
 
                     if ( isWeddingShop(shopDTO) ) {
                         result.put(shopId, Type.BACKUP);
-                        break;
+                        continue;
                     }
 
                     if ( isMovieShop(shopDTO) ) {
                         result.put(shopId, Type.BACKUP);
-                        break;
+                        continue;
                     }
 
                     result.put(shopId, Type.MAIN);
