@@ -3,19 +3,19 @@ package com.dianping.cell.bean;
 import lombok.Data;
 
 /**
- * Created by withnate on 15-3-30.
+ * Created by withnate on 15-3-25.
  */
 @Data
-public class ShopCategory {
+public class BaseShopDTO {
 
     private int shopId;
-    private int categoryId;
+    private int shopType;
 
     @Override
     public String toString() {
-        return "ShopCategory{" +
+        return "BaseShopDTO{" +
                 "shopId=" + shopId +
-                ", categoryId=" + categoryId +
+                ", shopType=" + shopType +
                 '}';
     }
 }

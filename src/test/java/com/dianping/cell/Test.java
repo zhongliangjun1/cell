@@ -1,6 +1,6 @@
 package com.dianping.cell;
 
-import com.dianping.cell.bean.ShopDto;
+import com.dianping.cell.bean.BaseShopDTO;
 
 /**
  * Created by withnate on 15-3-31.
@@ -8,7 +8,7 @@ import com.dianping.cell.bean.ShopDto;
 public class Test {
 
     public static void main(String[] args){
-        ShopDto shopDto = new ShopDto();
+        BaseShopDTO shopDto = new BaseShopDTO();
         shopDto.setShopId(1111);
         shopDto.setShopType(10);
         shopDto.setMainCategoryId(null);

@@ -1,7 +1,7 @@
 package com.dianping.cell.checker;
 
 import com.dianping.cat.Cat;
-import com.dianping.cell.bean.ShopDto;
+import com.dianping.cell.bean.BaseShopDTO;
 import com.dianping.cell.dao.ShopDataDao;
 import com.dianping.cell.handler.MWebRouterHandler;
 import com.dianping.combiz.spring.util.LionConfigUtils;
@@ -98,7 +98,7 @@ public class ShopUpdateChecker {
             if ( "n".equals(LionConfigUtils.getProperty("cell.ShopUpdateChecker.switch", "n")) )
                 return;
             try{
-                List<ShopDto> shopDtoList = shopDataDao.loadShop(lastShopId);
+                List<BaseShopDTO> shopDtoList = shopDataDao.loadShopsByPreLastShopId(lastShopId);
                 if(shopDtoList==null){
                     failTimes++;
                     continue;
@@ -107,7 +107,7 @@ public class ShopUpdateChecker {
 
 
                     List<Integer> shopIds = new ArrayList<Integer>();
-                    for(ShopDto shopDto : shopDtoList){
+                    for(BaseShopDTO shopDto : shopDtoList){
                         shopIds.add(shopDto.getShopId());
                     }
 
@@ -139,13 +139,13 @@ public class ShopUpdateChecker {
 
             while(failTimes<5){
                 try{
-                    List<ShopDto> shopDtoList = shopDataDao.loadIncreaseShop(lastShopId,beginTime,endTime);
+                    List<BaseShopDTO> shopDtoList = shopDataDao.loadIncreaseShop(lastShopId,beginTime,endTime);
                     if(shopDtoList==null){
                         failTimes++;
                         continue;
                     }
                     List<Integer> shopIds = new ArrayList<Integer>();
-                    for(ShopDto shopDto : shopDtoList){
+                    for(BaseShopDTO shopDto : shopDtoList){
                         shopIds.add(shopDto.getShopId());
                     }
                     mWebRouterHandler.execute(shopIds);

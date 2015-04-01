@@ -5,7 +5,7 @@ import com.dianping.avatar.dao.annotation.DAOAction;
 import com.dianping.avatar.dao.annotation.DAOActionType;
 import com.dianping.avatar.dao.annotation.DAOParam;
 import com.dianping.cell.bean.ShopCategory;
-import com.dianping.cell.bean.ShopDto;
+import com.dianping.cell.bean.BaseShopDTO;
 
 import java.util.List;
 
@@ -15,22 +15,31 @@ import java.util.List;
  */
 public interface ShopDataDao extends GenericDao {
 
-    @DAOAction(action = DAOActionType.QUERY)
-    public List<ShopDto> loadShop(@DAOParam("lastShopId") int lastShopId);
+
+    //  base shop info
 
     @DAOAction(action = DAOActionType.QUERY)
-    public List<ShopDto> loadShops(@DAOParam("shopids") List<Integer> shopids);
+    public List<BaseShopDTO> loadShopsByPreLastShopId(@DAOParam("lastShopId") int lastShopId);
+
+    @DAOAction(action = DAOActionType.QUERY)
+    public List<BaseShopDTO> loadShopsByShopIds(@DAOParam("shopIds") List<Integer> shopIds);
 
     @DAOAction(action = DAOActionType.LOAD)
-    public ShopDto loadSingleShop(@DAOParam("shopId") int shopId);
+    public BaseShopDTO loadSingleShop(@DAOParam("shopId") int shopId);
 
     @DAOAction(action = DAOActionType.QUERY)
-    public List<ShopCategory> loadShopCategory(@DAOParam("shopids") List<Integer> shopids);
+    public List<BaseShopDTO> loadIncreaseShop(@DAOParam("lastShopId") int lastShopId,@DAOParam("beginTime") String beginTime,@DAOParam("endTime") String endTime);
+
+
+
+
+    // shop category info
 
     @DAOAction(action = DAOActionType.LOAD)
-    public ShopCategory loadSingleShopCategory(@DAOParam("shopId") int shopId);
+    public ShopCategory loadShopMainCategoryByShopId(@DAOParam("shopId") int shopId);
 
     @DAOAction(action = DAOActionType.QUERY)
-    public List<ShopDto> loadIncreaseShop(@DAOParam("lastShopId") int lastShopId,@DAOParam("beginTime") String beginTime,@DAOParam("endTime") String endTime);
+    public List<ShopCategory> loadShopMainCategoriesByShopIds(@DAOParam("shopIds") List<Integer> shopIds);
+
 
 }

@@ -3,13 +3,11 @@ package com.dianping.cell.dao;
 import com.dianping.cat.Cat;
 import com.dianping.cell.AbstractTest;
 import com.dianping.cell.bean.ShopCategory;
-import com.dianping.cell.bean.ShopDto;
+import com.dianping.cell.bean.BaseShopDTO;
 import com.dianping.cell.handler.MWebRouterHandler;
-import org.apache.commons.collections.CollectionUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -27,13 +25,13 @@ public class DaoTest extends AbstractTest {
     @Test
     public void testLoadUserByUserId() {
 
-        List<ShopDto> shopDtoList = shopDataDao.loadShop(510000);
+        List<BaseShopDTO> shopDtoList = shopDataDao.loadShop(510000);
         List<Integer> shopIds = new ArrayList<Integer>();
-        for(ShopDto shopDto : shopDtoList){
+        for(BaseShopDTO shopDto : shopDtoList){
             shopIds.add(shopDto.getShopId());
         }
-        shopDtoList = (List<ShopDto>) assembleShop(shopDtoList,shopIds);
-        for(ShopDto shopDto : shopDtoList){
+        shopDtoList = (List<BaseShopDTO>) assembleShop(shopDtoList,shopIds);
+        for(BaseShopDTO shopDto : shopDtoList){
             shopIds.add(shopDto.getShopId());
             System.out.println(shopDto.toString());
         }

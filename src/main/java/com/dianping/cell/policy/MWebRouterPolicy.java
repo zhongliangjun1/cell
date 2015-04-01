@@ -1,10 +1,11 @@
 package com.dianping.cell.policy;
 
-import com.dianping.cat.Cat;
+import com.dianping.cell.bean.DetailShopDTO;
 import com.dianping.cell.bean.ShopCategory;
-import com.dianping.cell.bean.ShopDto;
+import com.dianping.cell.bean.BaseShopDTO;
 import com.dianping.cell.dao.ShopDataDao;
 import com.dianping.shopremote.remote.ShoppingMallService;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,72 +32,143 @@ public class MWebRouterPolicy extends Policy {
 
 
         if ( isMallShop(shopId) ) {
-            return Type.BACKUP; //Type.SHOPPING; 暂未迁出
+            return Type.BACKUP; // Type.SHOPPING; 暂未迁出
         }
 
-        ShopDto shopDto = getShopDto(shopId);
+        DetailShopDTO detailShopDTO = loadShop(shopId);
 
-        if ( isWeddingShop(shopDto) ) {
-            return Type.BACKUP;
+        if ( isWeddingShop(detailShopDTO) ) {
+            return Type.BACKUP; // Type.WEDDING;
         }
 
-        if ( isMovieShop(shopDto) ) {
-            return Type.BACKUP;
+        if ( isMovieShop(detailShopDTO) ) {
+            return Type.BACKUP; // Type.MOVIE;
         }
-
 
         return Type.MAIN;
     }
 
     @Override
     public Map<Integer,Type> judge(List<Integer> shopIds) {
+
         Map<Integer,Type> result = new HashMap<Integer, Type>();
+
         try {
-            List<ShopDto> shopDtoList = shopDataDao.loadShops(shopIds);
-            shopDtoList = (List<ShopDto>) assembleShop(shopDtoList,shopIds);
 
-            if(shopDtoList!=null){
-                for(ShopDto shopDto : shopDtoList){
-                    if ( isMallShop(shopDto.getShopId()) ) {
-                        result.put(shopDto.getShopId(),Type.BACKUP);//Type.SHOPPING; 暂未迁出
+            List<DetailShopDTO> detailShopDTOs = loadShops(shopIds);
+
+            if( CollectionUtils.isNotEmpty(detailShopDTOs) ){
+
+                for( DetailShopDTO shopDTO : detailShopDTOs ){
+
+                    int shopId = shopDTO.getShopId();
+
+                    if ( isMallShop(shopId) ) {
+                        result.put(shopId, Type.BACKUP);
                         break;
                     }
 
-                    if ( isWeddingShop(shopDto) ) {
-                        result.put(shopDto.getShopId(),Type.BACKUP);
+                    if ( isWeddingShop(shopDTO) ) {
+                        result.put(shopId, Type.BACKUP);
                         break;
                     }
 
-                    if ( isMovieShop(shopDto) ) {
-                        result.put(shopDto.getShopId(),Type.BACKUP);
+                    if ( isMovieShop(shopDTO) ) {
+                        result.put(shopId, Type.BACKUP);
                         break;
                     }
-                    result.put(shopDto.getShopId(),Type.MAIN);
+
+                    result.put(shopId, Type.MAIN);
                 }
+
             }
         }catch (Exception e){
-            Cat.logError("judge shopids error",e);
+            logger.error("judge shopIds error",e);
         }
-
 
         return result;
     }
 
-    private ShopDto getShopDto(int shopId){
-        ShopDto shopDto = null;
+    private DetailShopDTO loadShop(int shopId) {
+        DetailShopDTO detailShopDTO = null;
         try{
-            shopDto = shopDataDao.loadSingleShop(shopId);
-            ShopCategory shopCategory = shopDataDao.loadSingleShopCategory(shopId);
-            if( shopCategory!=null && shopDto!=null && shopCategory.getMainCategoryId()!=null ){
-                shopDto.setMainCategoryId(shopCategory.getMainCategoryId());
-            } else {
-                shopDto = null;
-            }
+            BaseShopDTO baseShopDTO = shopDataDao.loadSingleShop(shopId);
+            if ( baseShopDTO==null )
+                return null;
+
+            ShopCategory shopMainCategory = shopDataDao.loadShopMainCategoryByShopId(shopId);
+            int mainCategoryId = baseShopDTO.getShopType();
+            if ( shopMainCategory!=null )
+                mainCategoryId = shopMainCategory.getCategoryId();
+
+            detailShopDTO = new DetailShopDTO();
+            detailShopDTO.setShopId(baseShopDTO.getShopId());
+            detailShopDTO.setShopType(baseShopDTO.getShopType());
+            detailShopDTO.setMainCategoryId(mainCategoryId);
+
         }catch (Exception e){
-            Cat.logError("load shopDto error",e);
             logger.error("load shopDto error", e);
         }
-        return shopDto;
+        return detailShopDTO;
+    }
+
+    private List<DetailShopDTO> loadShops(List<Integer> shopIds) {
+
+        List<DetailShopDTO> result = null;
+
+        if ( CollectionUtils.isNotEmpty(shopIds) ) {
+
+            List<BaseShopDTO> baseShopDTOs = shopDataDao.loadShopsByShopIds(shopIds);
+            if ( CollectionUtils.isEmpty(baseShopDTOs) )
+                return null;
+
+            List<ShopCategory> shopMainCategories = shopDataDao.loadShopMainCategoriesByShopIds(shopIds);
+
+            result = convert(baseShopDTOs, shopMainCategories);
+        }
+
+        return result;
+
+    }
+
+    private List<DetailShopDTO> convert(List<BaseShopDTO> baseShopDTOs, List<ShopCategory> shopMainCategories) {
+
+        List<DetailShopDTO> result = new ArrayList<DetailShopDTO>();
+
+        if ( CollectionUtils.isNotEmpty(baseShopDTOs) ) {
+
+            Map<Integer, Integer> shopMainCategoryIdsRepo = toMap(shopMainCategories);
+
+            for ( BaseShopDTO baseShopDTO : baseShopDTOs ) {
+
+                Integer shopMainCategoryId = shopMainCategoryIdsRepo.get(baseShopDTO.getShopId());
+                if ( shopMainCategoryId==null )
+                    shopMainCategoryId = baseShopDTO.getShopType();
+
+                DetailShopDTO detailShopDTO = new DetailShopDTO();
+                detailShopDTO.setShopId(baseShopDTO.getShopId());
+                detailShopDTO.setShopType(baseShopDTO.getShopType());
+                detailShopDTO.setMainCategoryId(shopMainCategoryId);
+
+                result.add(detailShopDTO);
+            }
+        }
+
+        return result;
+
+    }
+
+    private Map<Integer, Integer> toMap(List<ShopCategory> shopMainCategories) {
+
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+
+        if ( CollectionUtils.isNotEmpty(shopMainCategories) ) {
+            for ( ShopCategory shopCategory : shopMainCategories ) {
+                map.put(shopCategory.getShopId(), shopCategory.getCategoryId());
+            }
+        }
+
+        return map;
     }
 
 
@@ -110,18 +182,18 @@ public class MWebRouterPolicy extends Policy {
         return result;
     }
 
-    private boolean isWeddingShop(ShopDto shopDto) {
+    private boolean isWeddingShop(DetailShopDTO detailShopDTO) {
         boolean result = false;
         try {
-            if (shopDto != null) {
+            if (detailShopDTO != null) {
 
-                int shopType = shopDto.getShopType() != null ? shopDto.getShopType().intValue() : 0;
+                int shopType = detailShopDTO.getShopType();
 
                 if (shopType == 55 || shopType == 70 || shopType == 90) {
                     result = true;
                 }
 
-                if (shopType == 50 && 6700 == shopDto.getMainCategoryId()) {
+                if (shopType == 50 && 6700 == detailShopDTO.getMainCategoryId()) {
                     result = true;
                 }
 
@@ -133,10 +205,10 @@ public class MWebRouterPolicy extends Policy {
         return result;
     }
 
-    private boolean isMovieShop(ShopDto shopDto) {
+    private boolean isMovieShop(DetailShopDTO detailShopDTO) {
         boolean result = false;
         try {
-            if (shopDto != null && 136 == shopDto.getMainCategoryId()) {
+            if (detailShopDTO != null && 136 == detailShopDTO.getMainCategoryId()) {
                 result = true;
             }
         } catch (Exception e) {
@@ -145,28 +217,6 @@ public class MWebRouterPolicy extends Policy {
         return result;
     }
 
-    public List<? extends ShopCategory> assembleShop(List<? extends  ShopCategory> shopList,List<Integer> shopIds) {
-        try {
-            List<ShopCategory> shopCategoryList = shopDataDao.loadShopCategory(shopIds);
-            Collections.sort(shopCategoryList, new Comparator<ShopCategory>() {
-                @Override
-                public int compare(ShopCategory o1, ShopCategory o2) {
-                    return o1.getShopId() - o2.getShopId();
-                }
-            });
-            for (ShopCategory shop : shopList) {
-                int index = Collections.binarySearch(shopCategoryList, new ShopCategory(shop.getShopId()));
-                if (index > -1 && index < shopList.size()) {
-                    shop.setMainCategoryId(shopCategoryList.get(index).getMainCategoryId());
-                }
-            }
-
-        }catch (Exception e){
-            System.out.println("assembleShop error "+e.getMessage());
-            Cat.logError("assembleShop error", e);
-        }
-        return shopList;
-    }
 
 
     @Autowired

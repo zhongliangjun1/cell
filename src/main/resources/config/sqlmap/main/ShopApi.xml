@@ -2,24 +2,24 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="ShopData">
 
-    <resultMap id="shop" class="com.dianping.cell.bean.ShopDto">
+    <resultMap id="shop" class="com.dianping.cell.bean.BaseShopDTO">
         <result column="ShopID" property="shopId" nullValue="0" />
         <result column="ShopType" property="shopType" nullValue="0" />
     </resultMap>
 
 
-    <select id="loadShop" resultMap="shop" parameterClass="map">
+    <select id="loadShopsByPreLastShopId" resultMap="shop" parameterClass="map">
         SELECT ShopID,ShopType
         FROM DP_Shop
         WHERE   ShopID > #lastShopId# order by ShopID ASC limit 500
     </select>
 
-    <select id="loadShops" resultMap="shop" parameterClass="map">
+    <select id="loadShopsByShopIds" resultMap="shop" parameterClass="map">
         SELECT ShopID,ShopType
         FROM DP_Shop
         WHERE   ShopID in
-        <iterate property="shopids" open="(" close=")" conjunction=",">
-            #shopids[]#
+        <iterate property="shopIds" open="(" close=")" conjunction=",">
+            #shopIds[]#
         </iterate>
     </select>
 
@@ -29,28 +29,37 @@
         WHERE   ShopID = #shopId# limit 1
     </select>
 
+
     <select id="loadIncreaseShop" resultMap="shop" parameterClass="map">
         SELECT ShopID,ShopType
         FROM DP_Shop
         WHERE ShopID > #lastShopId# and LastDate between  #beginTime# and #endTime# order by ShopID limit 500
     </select>
 
+
+
+
+
     <resultMap id="shopCategory" class="com.dianping.cell.bean.ShopCategory">
         <result column="ShopID" property="shopId" nullValue="0"/>
         <result column="CategoryID" property="mainCategoryId" nullValue="0"/>
     </resultMap>
 
-    <select id="loadShopCategory" resultMap="shopCategory" parameterClass="map">
+    <select id="loadShopMainCategoriesByShopIds" resultMap="shopCategory" parameterClass="map">
         select ShopID,CategoryID
-        from DP_ShopCategory where ShopID in
-        <iterate property="shopids" open="(" close=")" conjunction=",">
-            #shopids[]#
-        </iterate>  and IsMain=1
+        from DP_ShopCategory
+        where ShopID in
+        <iterate property="shopIds" open="(" close=")" conjunction=",">
+            #shopIds[]#
+        </iterate>
+        and IsMain=1
     </select>
 
-    <select id="loadSingleShopCategory" resultMap="shopCategory" parameterClass="map">
+    <select id="loadShopMainCategoryByShopId" resultMap="shopCategory" parameterClass="map">
         select ShopID,CategoryID
-        from DP_ShopCategory where ShopID = #shopId#  and IsMain=1 limit 1
+        from DP_ShopCategory
+        where ShopID = #shopId#  and IsMain=1
+        limit 1
     </select>
 
 
