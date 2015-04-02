@@ -74,6 +74,9 @@ value 站点映射 :
 
 * **checker** 是对 **listener** 的补充，以防有任何的消息遗漏。**checker** 可以是定时增量检查，也可以是全量检查。
 
+
+
+
 ####3） nginx lua 路由脚本 
 	
 	
@@ -119,6 +122,12 @@ value 站点映射 :
 	else ngx.exec("@backup") end
 
 [Lua redis client driver for the ngx_lua](https://github.com/openresty/lua-resty-redis)
+
+
+
+####4） 最终实现体系结构图
+
+![image](http://img.hb.aicdn.com/5f25fd1fe25a1b121b82a2f5e3b19caee322c6fed5c8-zs8R1G_fw658)
 
 	
 
