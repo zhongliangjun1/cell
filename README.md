@@ -121,7 +121,7 @@ value 站点映射 :
 	elseif ( res=="backup") then ngx.exec("@backup")
 	else ngx.exec("@backup") end
 
-[Lua redis client driver for the ngx_lua](https://github.com/openresty/lua-resty-redis)
+参考文献 : [Lua redis client driver for the ngx_lua](https://github.com/openresty/lua-resty-redis)
 
 
 
