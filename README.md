@@ -72,7 +72,53 @@ value 站点映射 :
 
 * **listener** 监听所有的 shop 变更，任意商户一旦有任何的改动，该 listener 便会获取其 shopId ，交由所有 **policy** 裁判，并将裁决结果更新到 redis 。
 
-* **checker** 是对 **listener** 的补充，以防有任何的消息遗漏。**checker** 可以是定时增量检查，也可以是全量检查。 
+* **checker** 是对 **listener** 的补充，以防有任何的消息遗漏。**checker** 可以是定时增量检查，也可以是全量检查。
+
+####3） nginx lua 路由脚本 
+	
+	
+	local temp_uri=ngx.var.request_uri
+
+	_,_,shopid=string.find(temp_uri,"/shop/(%d+)")
+
+	if (shopid==nil) then ngx.exec("@backup") end
+
+	local redis = require "resty.redis"
+
+	local red = redis.new()
+
+	local ok, err = red.connect('${cell.redis1.ip}', '${cell.redis1.port}')
+
+	if not ok then
+		local ok, err = red.connect('${cell.redis2.ip}', '${cell.redis2.port}')
+	end
+
+	
+	if not ok then
+   		ngx.exec("@backup")
+	end
+	
+	local res, err = red:get("mobile:wap:m:web:shop:"..shopid)
+	
+	if not res then
+   	   ngx.exec("@backup")
+	end
+
+	if res == ngx.null then 
+   	   ngx.exec("@backup")
+	end  
+
+	local ok, err = red:set_keepalive(10000, 100)
+	if not ok then
+       ngx.say("failed to set keepalive: ", err)
+	end
+
+	if ( res=="main") then ngx.exec("@main")
+	elseif ( res=="shopping") then ngx.exec("@shopping")
+	elseif ( res=="backup") then ngx.exec("@backup")
+	else ngx.exec("@backup") end
+
+[Lua redis client driver for the ngx_lua](https://github.com/openresty/lua-resty-redis)
 
 	
 
